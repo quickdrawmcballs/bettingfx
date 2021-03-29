@@ -1,0 +1,39 @@
+{
+  "name": "server",
+  "version": "1.0.1",
+  "private": true,
+  "description": "",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "npm run build",
+    "build": "tsc",
+    "format-ts": "prettier --write \"src/*.ts\"",
+    "format-output": "prettier --write \"dist/*.js\"",
+    "start-server": "cross-env NODE_ENV=debug node dist/server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express": "^4.17.11",
+    "@types/socket.io": "^2.1.13",
+    "config": "^3.3.1",
+    "express": "^4.17.1",
+    "lodash": "^4.17.20",
+    "moment": "^2.27.0",
+    "path": "^0.12.7",
+    "rxjs": "^6.6.2",
+    "socket.io": "^3.1.1",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/config": "0.0.36",
+    "@types/lodash": "^4.14.161",
+    "@types/moment": "^2.13.0",
+    "@types/node": "^12.12.55",
+    "cross-env": "^6.0.3",
+    "prettier": "^1.18.2",
+    "typescript": "^3.9.7"
+  }
+}
