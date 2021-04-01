@@ -1,0 +1,387 @@
+{
+  "sportRadar": {
+    "format": "json"
+  },
+  "theOddsApi":{
+    "region":"us",
+    "dateFormat":"iso",
+    "oddsFormat":"american"
+  },
+  "teams": {
+    "Arizona Cardinals": {
+      "city": "Arizona",
+      "team": "Cardinals",
+      "full": "Arizona Cardinals",
+      "league": "NFL"
+    },
+    "Atlanta Falcons": {
+      "city": "Atlanta",
+      "team": "Falcons",
+      "full": "Atlanta Falcons",
+      "league": "NFL"
+    },
+    "Baltimore Ravens": {
+      "city": "Baltimore",
+      "team": "Ravens",
+      "full": "Baltimore Ravens",
+      "league": "NFL"
+    },
+    "Buffalo Bills": {
+      "city": "Buffalo",
+      "team": "Bills",
+      "full": "Buffalo Bills",
+      "league": "NFL"
+    },
+    "Carolina Panthers": {
+      "city": "Carolina",
+      "team": "Panthers",
+      "full": "Carolina Panthers",
+      "league": "NFL"
+    },
+    "Chicago Bears": {
+      "city": "Chicago",
+      "team": "Bears",
+      "full": "Chicago Bears",
+      "league": "NFL"
+    },
+    "Cincinnati Bengals": {
+      "city": "Cincinnati",
+      "team": "Bengals",
+      "full": "Cincinnati Bengals",
+      "league": "NFL"
+    },
+    "Cleveland Browns": {
+      "city": "Cleveland",
+      "team": "Browns",
+      "full": "Cleveland Browns",
+      "league": "NFL"
+    },
+    "Dallas Cowboys": {
+      "city": "Dallas",
+      "team": "Cowboys",
+      "full": "Dallas Cowboys",
+      "league": "NFL"
+    },
+    "Denver Broncos": {
+      "city": "Denver",
+      "team": "Broncos",
+      "full": "Denver Broncos",
+      "league": "NFL"
+    },
+    "Detroit Lions": {
+      "city": "Detroit",
+      "team": "Lions",
+      "full": "Detroit Lions",
+      "league": "NFL"
+    },
+    "Green Bay Packers": {
+      "city": "Green Bay",
+      "team": "Packers",
+      "full": "Green Bay Packers",
+      "league": "NFL"
+    },
+    "Houston Texans": {
+      "city": "Houston",
+      "team": "Texans",
+      "full": "Houston Texans",
+      "league": "NFL"
+    },
+    "Indianapolis Colts": {
+      "city": "Indianapolis",
+      "team": "Colts",
+      "full": "Indianapolis Colts",
+      "league": "NFL"
+    },
+    "Jacksonville Jaguars": {
+      "city": "Jacksonville",
+      "team": "Jaguars",
+      "full": "Jacksonville Jaguars",
+      "league": "NFL"
+    },
+    "Kansas City Chiefs": {
+      "city": "Kansas City",
+      "team": "Chiefs",
+      "full": "Kansas City Chiefs",
+      "league": "NFL"
+    },
+    "Las Vegas Raiders": {
+      "city": "Las Vegas",
+      "team": "Raiders",
+      "full": "Las Vegas Raiders",
+      "league": "NFL"
+    },
+    "Los Angeles Chargers": {
+      "city": "Los Angeles",
+      "team": "Chargers",
+      "full": "Los Angeles Chargers",
+      "league": "NFL"
+    },
+    "Los Angeles Rams": {
+      "city": "Los Angeles",
+      "team": "Rams",
+      "full": "Los Angeles Rams",
+      "league": "NFL"
+    },
+    "Miami Dolphins": {
+      "city": "Miami",
+      "team": "Dolphins",
+      "full": "Miami Dolphins",
+      "league": "NFL"
+    },
+    "Minnesota Vikings": {
+      "city": "Minnesota",
+      "team": "Vikings",
+      "full": "Minnesota Vikings",
+      "league": "NFL"
+    },
+    "New England Patriots": {
+      "city": "New England",
+      "team": "Patriots",
+      "full": "New England Patriots",
+      "league": "NFL"
+    },
+    "New Orleans Saints": {
+      "city": "New Orleans",
+      "team": "Saints",
+      "full": "New Orleans Saints",
+      "league": "NFL"
+    },
+    "New York Giants": {
+      "city": "New York",
+      "team": "Giants",
+      "full": "New York Giants",
+      "league": "NFL"
+    },
+    "New York Jets": {
+      "city": "New York",
+      "team": "Jets",
+      "full": "New York Jets",
+      "league": "NFL"
+    },
+    "Philadelphia Eagles": {
+      "city": "Philadelphia",
+      "team": "Eagles",
+      "full": "Philadelphia Eagles",
+      "league": "NFL"
+    },
+    "Pittsburgh Steelers": {
+      "city": "Pittsburgh",
+      "team": "Steelers",
+      "full": "Pittsburgh Steelers",
+      "league": "NFL"
+    },
+    "San Francisco 49ers": {
+      "city": "San Francisco",
+      "team": "49ers",
+      "full": "San Francisco 49ers",
+      "league": "NFL"
+    },
+    "Seattle Seahawks": {
+      "city": "Seattle",
+      "team": "Seahawks",
+      "full": "Seattle Seahawks",
+      "league": "NFL"
+    },
+    "Tennessee Titans": {
+      "city": "Tennessee",
+      "team": "Titans",
+      "full": "Tennessee Titans",
+      "league": "NFL"
+    },
+    "Tampa Bay Buccaneers": {
+      "city": "Tampa Bay",
+      "team": "Buccaneers",
+      "full": "Tampa Bay Buccaneers",
+      "league": "NFL"
+    },
+    "Washington Football Team": {
+      "city": "Washington",
+      "team": "Football Team",
+      "full": "Washington Football Team",
+      "league": "NFL"
+    },
+
+    "Atlanta Hawks": {
+      "city": "Atlanta",
+      "team": "Hawks",
+      "full": "Atlanta Hawks",
+      "league": "NBA"
+    },
+    "Boston Celtics": {
+      "city": "Boston",
+      "team": "Celtics",
+      "full": "Boston Celtics",
+      "league": "NBA"
+    },
+    "Brooklyn Nets": {
+      "city": "Brooklyn",
+      "team": "Nets",
+      "full": "Brooklyn Nets",
+      "league": "NBA"
+    },
+    "Charlotte Hornets": {
+      "city": "Charlotte",
+      "team": "Hornets",
+      "full": "Charlotte Hornets",
+      "league": "NBA"
+    },
+    "Chicago Bulls": {
+      "city": "Chicago",
+      "team": "Bulls",
+      "full": "Chicago Bulls",
+      "league": "NBA"
+    },
+    "Cleveland Cavaliers": {
+      "city": "Cleveland",
+      "team": "Cavaliers",
+      "full": "Cleveland Cavaliers",
+      "league": "NBA"
+    },
+    "Dallas Mavericks": {
+      "city": "Dallas",
+      "team": "Mavericks",
+      "full": "Dallas Mavericks",
+      "league": "NBA"
+    },
+    "Denver Nuggets": {
+      "city": "Denver",
+      "team": "Nuggets",
+      "full": "Denver Nuggets",
+      "league": "NBA"
+    },
+    "Detroit Pistons": {
+      "city": "Detroit",
+      "team": "Pistons",
+      "full": "Detroit Pistons",
+      "league": "NBA"
+    },
+    "Golden State Warriors": {
+      "city": "Golden State",
+      "team": "Warriors",
+      "full": "Golden State Warriors",
+      "league": "NBA"
+    },
+    "Houston Rockets": {
+      "city": "Houston",
+      "team": "Rockets",
+      "full": "Houston Rockets",
+      "league": "NBA"
+    },
+    "Indiana Pacers": {
+      "city": "Indiana",
+      "team": "Pacers",
+      "full": "Indiana Pacers",
+      "league": "NBA"
+    },
+    "Memphis Grizzlies": {
+      "city": "Memphis",
+      "team": "Grizzlies",
+      "full": "Memphis Grizzlies",
+      "league": "NBA"
+    },
+    "Miami Heat": {
+      "city": "Miami",
+      "team": "Heat",
+      "full": "Miami Heat",
+      "league": "NBA"
+    },
+    "Milwaukee Bucks": {
+      "city": "Milwaukee",
+      "team": "Bucks",
+      "full": "Milwaukee Bucks",
+      "league": "NBA"
+    },
+    "Minnesota Timberwolves": {
+      "city": "Minnesota",
+      "team": "Timberwolves",
+      "full": "Minnesota Timberwolves",
+      "league": "NBA"
+    },
+    "New Orleans Pelicans": {
+      "city": "New Orleans",
+      "team": "Pelicans",
+      "full": "New Orleans Pelicans",
+      "league": "NBA"
+    },
+    "New York Knicks": {
+      "city": "New York",
+      "team": "Knicks",
+      "full": "New York Knicks",
+      "league": "NBA"
+    },
+    "Oklahoma City Thunder": {
+      "city": "Oklahoma City",
+      "team": "Thunder",
+      "full": "Oklahoma City Thunder",
+      "league": "NBA"
+    },
+    "Orlando Magic": {
+      "city": "Orlando",
+      "team": "Magic",
+      "full": "Orlando Magic",
+      "league": "NBA"
+    },
+    "Los Angeles Clippers": {
+      "city": "Los Angeles",
+      "team": "Clippers",
+      "full": "Los Angeles Clippers",
+      "league": "NBA",
+      "alt1": "LA Clippers"
+    },
+    "Los Angeles Lakers": {
+      "city": "Los Angeles",
+      "team": "Lakers",
+      "full": "Los Angeles Lakers",
+      "league": "NBA"
+    },
+    "Philadelphia 76ers": {
+      "city": "Philadelphia",
+      "team": "76ers",
+      "full": "Philadelphia 76ers",
+      "league": "NBA"
+    },
+    "Phoenix Suns": {
+      "city": "Phoenix",
+      "team": "Suns",
+      "full": "Phoenix Suns",
+      "league": "NBA"
+    },
+    "Portland Trail Blazers": {
+      "city": "Portland",
+      "team": "Trail Blazers",
+      "full": "Portland Trail Blazers",
+      "league": "NBA"
+    },
+    "Sacramento Kings": {
+      "city": "Sacramento",
+      "team": "Kings",
+      "full": "Sacramento Kings",
+      "league": "NBA"
+    },
+    "San Antonio Spurs": {
+      "city": "San Antonio",
+      "team": "Spurs",
+      "full": "San Antonio Spurs",
+      "league": "NBA"
+    },
+    "Toronto Raptors": {
+      "city": "Toronto",
+      "team": "Raptors",
+      "full": "Toronto Raptors",
+      "league": "NBA"
+    },
+    "Utah Jazz": {
+      "city": "Utah",
+      "team": "Jazz",
+      "full": "Utah Jazz",
+      "league": "NBA"
+    },
+    "Washington Wizards": {
+      "city": "Washington",
+      "team": "Wizards",
+      "full": "Washington Wizards",
+      "league": "NBA"
+    }
+  }
+
+}

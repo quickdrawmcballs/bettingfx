@@ -21,6 +21,68 @@
             "runtimeExecutable": "npm",
             "runtimeArgs": ["run-script", "start"],
             "outputCapture": "std"
+        },
+
+        {
+            "name": "dfd",
+            "type": "pwa-node",
+            "request": "launch",
+            "program": "${workspaceFolder}\\lib\\main.js",
+            "env": {"NODE_ENV":"debug"},
+            "args": ["dfd"],
+            "outputCapture": "std"
+        },
+        {
+            "name": "nfl_odds",
+            "type": "pwa-node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/server",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run-script", "main", "--", "nfl_odds","--refresh=true"],
+            "outputCapture": "std"
+        },
+        {
+            "name": "nba_odds",
+            "type": "pwa-node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/server",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run-script", "main", "--", "nba_odds","--refresh=true"],
+            "outputCapture": "std"
+        },
+        {
+            "name": "nfl_season",
+            "type": "pwa-node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/server",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run-script", "main", "--", "nfl_season","--refresh=true"],
+            "outputCapture": "std"
+        },
+        {
+            "name": "nba_season",
+            "type": "pwa-node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/server",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run-script", "main", "--", "nba_season","--refresh=true"],
+            "outputCapture": "std"
+        },
+        {
+            "name": "neo4j",
+            "type": "pwa-node",
+            "request": "launch",
+            "program": "${workspaceFolder}\\lib\\utils\\neo4j.js",
+            "outputCapture": "std"
+        },
+        {
+            "name": "nba_play",
+            "type": "pwa-node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/server",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run-script", "main", "--", "nba_play","--refresh=false"],
+            "outputCapture": "std"
         }
     ]
 }

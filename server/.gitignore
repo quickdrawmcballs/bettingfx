@@ -44,3 +44,9 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+#project
+/lib/
+/game_stats
+/config/debug.json
+/config/sportsOdds.json
