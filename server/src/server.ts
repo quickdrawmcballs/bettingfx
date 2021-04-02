@@ -1,5 +1,11 @@
-import http from 'http';
+import { createServer } from 'http';
 import express from 'express';
+
+import { Server } from "socket.io";
+
+import { Logger } from './logging';
+import { doSeason as NBASeason } from './nba/statsRetreiver';
+import { doOdds } from './utils/oddsEngine';
 
 const documents:any = {};
 
@@ -7,14 +13,29 @@ const PORT = 8001;
 
 async function run() {
     const port = process.env.PORT || PORT;
-    // const server = createServer();
-    // const io = socketio(server);
     const app = express();
+
     app.set('port', port);
+    // app.use( (req, res, next) => {
+    //     res.header("Access-Control-Allow-Origin", "http://localhost:4200"); //The ionic server
+    //     res.header("Access-Control-Allow-Credentials", "true");
+    //     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    //     next();
+    // });
 
-    let io = require('socket.io')(http);
+    const httpServer = createServer(app);
+    const io = new Server(httpServer, {
+        cors: {
+            // origin: "*",
+            origin: "http://localhost:4200",
+            methods: ["GET", "POST"],
+            credentials: true,
+            // allowedHeaders: ['Origin, X-Requested-With, Content-Type, Accept']
+            allowedHeaders: ['Content-Type', 'Authorization']
+        }
+    });
 
-    io.on('connection', (socket:any)=>{
+    io.on('connection', (socket)=>{
         let previousId:string;
 
         const safeJoin = (currentId:string) => {
@@ -40,17 +61,70 @@ async function run() {
             socket.to(doc.id).emit('document', doc);
         });
 
-        io.emit('documents', Object.keys(documents));
+        // io.emit('documents', Object.keys(documents));
+
+
+        // nba 
+
+        socket.on('refresh-nba-odds', async (refresh:boolean) => {
+            Logger.info(`Running NBA odds... Refresh:${refresh}`);
+            try {
+                let odds = await doOdds({sport:'basketball_nba',display:'nba'},refresh);
+                socket.emit('oddsNBA',odds);
+            }
+            catch (error) {
+                socket.emit('server_error',{
+                    message: 'Error Updating Odds',
+                    details: 'An Error has occured updating Odds',
+                    error
+                });
+            }
+        });
+
+        socket.on('refresh-nba-season', async (refresh:boolean) => {
+            Logger.info(`Running season... Refresh:${refresh}`);
+            try {
+                let season = await NBASeason(refresh);
+                socket.emit('oddsNBA',season);
+            }
+            catch (error) {
+                socket.emit('server_error',{
+                    message: 'Error Updating NBA Season',
+                    details: 'An Error has occured updating NBA Season',
+                    error
+                });
+            }
+        });
+
+        socket.on('nba-tonights-games', async (refresh:boolean)=>{
+            Logger.info(`Running tonight's games... Refresh:${refresh}`);
+            try {
+                let season = await NBASeason(refresh);
+                socket.emit('nbaTonightsGames',season);
+            }
+            catch (error) {
+                socket.emit('server_error',{
+                    message: `Error Updating NBA Tonight's Games`,
+                    details: `An Error has occured updating NBA Tonight's Games`,
+                    error
+                });
+            }
+        });
+
+        socket.on('error', (error:any)=>{
+            socket.emit('server_error',{
+                message: 'Socket.IO Error',
+                details: 'An Error has occured with the web sockets',
+                error
+            });
+        })
 
         console.log(`Socket ${socket.id} has connected`);
     });
 
-    http
-        .createServer(app)
-        .listen(port, () => {
-            console.log(`  > Running socket on port: ${port}`);
-        }
-    );
+    httpServer.listen(port, () => {
+        console.log(`  > Running socket on port: ${port}`);
+    });
 }
 
 run();

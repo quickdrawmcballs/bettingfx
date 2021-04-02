@@ -1,37 +1,25 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { NbaGame } from 'src/app/models/nba-game.model';
+
+import { NBAOdds } from '../models/nba-odds.model';
+import { NBASeason } from '../models/nba-season.model';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class NbaGamesService {
-
-  currentDocument = this.socket.fromEvent<NbaGame>('document');
-  documents = this.socket.fromEvent<string[]>('documents');
+export class NbaService {
+  
+  oddsNBA = this.socket.fromEvent<NBAOdds[]>('oddsNBA');
+  seasonNBA = this.socket.fromEvent<NBASeason[]>('seasonNBA');
 
   constructor(private socket: Socket) { }
 
-  getDocument(id: string) {
-    this.socket.emit('getDoc', id);
+  updateOdds(refresh:boolean=false) {
+    this.socket.emit('refresh-nba-odds',refresh);
   }
 
-  newDocument() {
-    this.socket.emit('addDoc', { id: this.docId(), doc: '' });
-  }
-
-  editDocument(document: Document) {
-    this.socket.emit('editDoc', document);
-  }
-
-  private docId() {
-    let text = '';
-    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-    for (let i = 0; i < 5; i++) {
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-
-    return text;
+  updateSeason(refresh:boolean=false) {
+    this.socket.emit('refresh-nba-season',refresh);
   }
 }

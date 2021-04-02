@@ -221,8 +221,8 @@ export async function calc(refresh?:boolean) {
             let homeBuilt = allTeamsSeasonStats[home.full];
             let awayBuilt = allTeamsSeasonStats[away.full];
 
-            console.log(`${game.date}\t${away.full} (${awayBuilt.wins.length}-${awayBuilt.loses.length}): ${awayBuilt.hwPerc}\t@ ` + 
-                `${home.full} (${homeBuilt.wins.length}-${homeBuilt.loses.length}): ${homeBuilt.hwPerc}\t${game.odds_spread} ${game.odds_vig}`);
+            console.log(`${game.date}\t${away.full} (${awayBuilt.wins.length}-${awayBuilt.loses.length}): ${awayBuilt.hwPerc}, ${awayBuilt.downAtHalfWinPerc}\t@ ` + 
+                `${home.full} (${homeBuilt.wins.length}-${homeBuilt.loses.length}): ${homeBuilt.hwPerc}, ${homeBuilt.downAtHalfWinPerc}\t${game.odds_spread} ${game.odds_vig}`);
 
         });
 
@@ -280,6 +280,7 @@ function formatTeamStats(allGames:TEAM_BOXSCORES[],team:string) : any {
         downAtHalfWin,
         tiesAtHalfWin,
 
-        hwPerc: parseFloat(formatFloat(upAtHalf.length===0 ? 0 : (upAtHalfWin.length / upAtHalf.length * 100))).toFixed(2)+'%'
+        hwPerc: parseFloat(formatFloat(upAtHalf.length===0 ? 0 : (upAtHalfWin.length / upAtHalf.length * 100))).toFixed(2)+'%',
+        downAtHalfWinPerc: parseFloat(formatFloat(downAtHalf.length===0 ? 0 : (downAtHalfWin.length / downAtHalf.length * 100))).toFixed(2)+'%'
     };
 }

@@ -16,8 +16,10 @@ import { SortTableComponent } from './sort-table/sort-table.component';
 import { NbaGamesListComponent } from './components/nba-games-list/nba-games-list.component';
 import { DocumentComponent } from './components/document/document.component';
 import { DocumentListComponent } from './components/document-list/document-list.component';
+import { NbaRefreshOddsComponent } from './components/nba-refresh-odds/nba-refresh-odds.component';
+import { NbaRefreshSeasonComponent } from './components/nba-refresh-season/nba-refresh-season.component';
 
-const config: SocketIoConfig = { url: 'http://localhost:8001', options: {} };
+const config: SocketIoConfig = { url: 'http://localhost:8001', options:{}}; // withCredentials: false
 
 @NgModule({
   imports: [
@@ -35,7 +37,9 @@ const config: SocketIoConfig = { url: 'http://localhost:8001', options: {} };
     SortTableComponent,
     NbaGamesListComponent,
     DocumentComponent,
-    DocumentListComponent
+    DocumentListComponent,
+    NbaRefreshOddsComponent,
+    NbaRefreshSeasonComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

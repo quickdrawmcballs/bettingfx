@@ -22,7 +22,13 @@
             "runtimeArgs": ["run-script", "start"],
             "outputCapture": "std"
         },
-
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Chrome Debugger",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}/client",
+        },
         {
             "name": "dfd",
             "type": "pwa-node",
