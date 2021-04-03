@@ -1,11 +1,11 @@
 import { createServer } from 'http';
-import express from 'express';
-
 import { Server } from "socket.io";
+import express from 'express';
 
 import { Logger } from './logging';
 import { doSeason as NBASeason } from './nba/statsRetreiver';
 import { doOdds } from './utils/oddsEngine';
+import { getUpcomingGameStats } from './nba/statsEngine';
 
 const documents:any = {};
 
@@ -73,6 +73,7 @@ async function run() {
                 socket.emit('oddsNBA',odds);
             }
             catch (error) {
+                Logger.error(error);
                 socket.emit('server_error',{
                     message: 'Error Updating Odds',
                     details: 'An Error has occured updating Odds',
@@ -88,6 +89,7 @@ async function run() {
                 socket.emit('oddsNBA',season);
             }
             catch (error) {
+                Logger.error(error);
                 socket.emit('server_error',{
                     message: 'Error Updating NBA Season',
                     details: 'An Error has occured updating NBA Season',
@@ -96,22 +98,24 @@ async function run() {
             }
         });
 
-        socket.on('nba-tonights-games', async (refresh:boolean)=>{
-            Logger.info(`Running tonight's games... Refresh:${refresh}`);
+        socket.on('nba-upcoming-games-stats', async (refresh:boolean)=>{
+            Logger.info(`Running upcoming games stats... Refresh:${refresh}`);
             try {
-                let season = await NBASeason(refresh);
-                socket.emit('nbaTonightsGames',season);
+                let stats = await getUpcomingGameStats(refresh);
+                socket.emit('UpcomingNBAGamesStats', stats);
             }
             catch (error) {
+                Logger.error(error);
                 socket.emit('server_error',{
-                    message: `Error Updating NBA Tonight's Games`,
-                    details: `An Error has occured updating NBA Tonight's Games`,
+                    message: `Error Updating NBA Upcoming Games`,
+                    details: `An Error has occured updating NBA Upcoming Games`,
                     error
                 });
             }
         });
 
         socket.on('error', (error:any)=>{
+            Logger.error(error);
             socket.emit('server_error',{
                 message: 'Socket.IO Error',
                 details: 'An Error has occured with the web sockets',

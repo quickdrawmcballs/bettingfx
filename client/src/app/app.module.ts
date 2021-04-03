@@ -11,13 +11,14 @@ import { FormsModule } from '@angular/forms';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 import { AppComponent } from './app.component';
-import { MainTableComponent } from './main-table/main-table.component';
-import { SortTableComponent } from './sort-table/sort-table.component';
+import { MainTableComponent } from './components/main-table/main-table.component';
+import { SortTableComponent } from './components/sort-table/sort-table.component';
 import { NbaGamesListComponent } from './components/nba-games-list/nba-games-list.component';
 import { DocumentComponent } from './components/document/document.component';
 import { DocumentListComponent } from './components/document-list/document-list.component';
 import { NbaRefreshOddsComponent } from './components/nba-refresh-odds/nba-refresh-odds.component';
 import { NbaRefreshSeasonComponent } from './components/nba-refresh-season/nba-refresh-season.component';
+import { UpcomingNbaGamesStatsTableComponent } from './components/upcoming-nba-games-stats-table/upcoming-nba-games-stats-table.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:8001', options:{}}; // withCredentials: false
 
@@ -39,7 +40,8 @@ const config: SocketIoConfig = { url: 'http://localhost:8001', options:{}}; // w
     DocumentComponent,
     DocumentListComponent,
     NbaRefreshOddsComponent,
-    NbaRefreshSeasonComponent
+    NbaRefreshSeasonComponent,
+    UpcomingNbaGamesStatsTableComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

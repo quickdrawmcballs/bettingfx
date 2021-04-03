@@ -63,6 +63,139 @@ interface SCORE_ANALYSIS {
     ftr: string;
 }
 
+interface UPCOMING_GAME_STATS {
+    date: string;
+    home: string;
+    away: string;
+    homeSeason: GAME_TEAM_STATS;
+    awaySeason: GAME_TEAM_STATS;
+    homeLast9: GAME_TEAM_STATS;
+    awayLast9: GAME_TEAM_STATS;
+    odds_spread: string | undefined,
+    odds_vig: string | undefined
+}
+
+interface GAME_TEAM_STATS {
+    team:string;
+    allGames:TEAM_BOXSCORES[];
+    wins:TEAM_BOXSCORES[];
+    loses:TEAM_BOXSCORES[];
+    downAtHalf:TEAM_BOXSCORES[];
+    upAtHalfWin:TEAM_BOXSCORES[];
+    downAtHalfWin:TEAM_BOXSCORES[];
+    tiesAtHalfWin:TEAM_BOXSCORES[];
+
+    hwPerc: string;
+    downAtHalfWinPerc: string;
+}
+
+const team_boxscores = new Map();
+let analysis:SCORE_ANALYSIS[] = [];
+let upcomingGames:Game[] = [];
+
+async function updateBoxscores(refresh?: boolean) {
+    
+    let { json } = await doSeason(refresh);
+
+    json.forEach( (game:any) => {
+        let h_team = getTeam(game.home.name);
+        let a_team = getTeam(game.away.name);
+
+        if (game.game_stats.home.points>game.game_stats.away.points) {
+            game.winner = h_team.full;
+            game.loser = a_team.full;
+        }
+        else {
+            game.winner = a_team.full;
+            game.loser = h_team.full;
+        }
+        game.h_half = game.game_stats.home.scoring[0].points + game.game_stats.home.scoring[1].points;
+        game.a_half = game.game_stats.away.scoring[0].points + game.game_stats.away.scoring[1].points;
+        game.half_winner = (game.h_half === game.a_half) ? 'Tied' : (game.h_half > game.a_half) ? h_team.full : a_team.full;
+        game.half_loser = (game.h_half === game.a_half) ? 'Tied' : (game.h_half > game.a_half) ? a_team.full : h_team.full;
+
+        game.norm_home = h_team;
+        game.norm_away = a_team;
+
+        // console.log(`${game.id} - ${game.away.name} @ ${game.home.name}`);
+        let home_BoxScore = <TEAM_BOXSCORES>team_boxscores.get(h_team.full);
+        if (!home_BoxScore) {
+            home_BoxScore = new TeamBoxScores(h_team);
+            team_boxscores.set(h_team.full,home_BoxScore);
+        }
+        home_BoxScore.games.away.push(game);
+
+        let away_BoxScore = <TEAM_BOXSCORES>team_boxscores.get(a_team.full);
+        if (!away_BoxScore) {
+            away_BoxScore = new TeamBoxScores(a_team);
+            team_boxscores.set(a_team.full,away_BoxScore);
+        }
+        away_BoxScore.games.away.push(game);
+
+        analysis.push({
+            h_team,
+            h_q1: game.game_stats.home.scoring[0].points,
+            h_q2: game.game_stats.home.scoring[1].points,
+            h_q3: game.game_stats.home.scoring[2].points,
+            h_q4: game.game_stats.home.scoring[3].points,
+            h_half: game.game_stats.home.scoring[0].points + game.game_stats.home.scoring[1].points,
+            h_2half: game.game_stats.home.scoring[2].points + game.game_stats.home.scoring[3].points,
+            h_total: game.game_stats.home.points,
+
+            a_team,
+            a_q1: game.game_stats.away.scoring[0].points,
+            a_q2: game.game_stats.away.scoring[1].points,
+            a_q3: game.game_stats.away.scoring[2].points,
+            a_q4: game.game_stats.away.scoring[3].points,
+            a_half: game.game_stats.away.scoring[0].points + game.game_stats.away.scoring[1].points,
+            a_2half: game.game_stats.away.scoring[2].points + game.game_stats.away.scoring[3].points,
+            a_total: game.game_stats.away.points,
+
+            ftr: (game.game_stats.home.points>game.game_stats.away.points) ? 'H' : 'A'
+        });
+    });
+}
+
+async function updateUpcomingGames(refresh?:boolean) {
+    upcomingGames = await getOdds({sport:'basketball_nba',display:'nba'},refresh);
+}
+
+export async function getUpcomingGameStats(refresh:boolean=false) : Promise<UPCOMING_GAME_STATS[]> {
+
+    await Promise.all([updateBoxscores(refresh), updateUpcomingGames(refresh)]);
+
+    const allTeamsSeasonStats = getAllTeamStats(team_boxscores);
+    const lastXSeasonStats = getLastTeamStats(team_boxscores,9);
+
+    const upcoming = upcomingGames.map((game:Game)=>{
+        const home = getTeam(game.home_team);
+        const away = getTeam(game.away_team);
+
+        const homeSeason = allTeamsSeasonStats[home.full];
+        const awaySeason = allTeamsSeasonStats[away.full];
+        
+        const homeLastNine = lastXSeasonStats[home.full];
+        const awayLastNine = lastXSeasonStats[away.full];
+
+        console.log(`${game.date}\t${away.full} (${awaySeason.wins.length}-${awaySeason.loses.length}): ${awaySeason.hwPerc}, ${awayLastNine.downAtHalfWinPerc}\t@ ` + 
+            `${home.full} (${homeSeason.wins.length}-${homeSeason.loses.length}): ${homeSeason.hwPerc}, ${homeLastNine.downAtHalfWinPerc}\t${game.odds_spread} ${game.odds_vig}`);
+
+        return {
+            date: game.date,
+            home:home.full,
+            away:away.full,
+            homeSeason,
+            awaySeason,
+            homeLast9:lastXSeasonStats[home.full],
+            awayLast9:lastXSeasonStats[away.full],
+            odds_spread:game.odds_spread,
+            odds_vig: game.odds_vig
+        }
+    });
+    
+    return upcoming;
+}
+
 export async function calc(refresh?:boolean) {
     // let team_boxscores:{ [key:string]:TEAM_BOXSCORES } = {};
     let team_boxscores = new Map();
@@ -245,30 +378,30 @@ function formatCSV(csv:string) : string {
     return csv;
 }
 
-function getAllTeamStats(team_boxscores: Map<any,TEAM_BOXSCORES>) : any {
+function getAllTeamStats(team_boxscores: Map<any,TEAM_BOXSCORES>) : {[key: string]: GAME_TEAM_STATS;} {
     let built:any = {};
     Array.from(team_boxscores.entries()).forEach( (team) => {
         built[team[0]] = formatTeamStats((<TEAM_BOXSCORES>team[1]).getAllGames(),team[0])
     });
     return built;
 }
-function getLastTeamStats(team_boxscores: Map<any,TEAM_BOXSCORES>,count:number) : any {
+function getLastTeamStats(team_boxscores: Map<any,TEAM_BOXSCORES>,count:number) : {[key: string]: GAME_TEAM_STATS;} {
     let built:any = {};
     Array.from(team_boxscores.entries()).forEach( (team) => 
         built[team[0]] = formatTeamStats((<TEAM_BOXSCORES>team[1]).getLastGames(count),team[0])
     );
     return built;
 }
-function formatTeamStats(allGames:TEAM_BOXSCORES[],team:string) : any {
-    let wins = _.filter(allGames,{'winner':team});
-    let loses = _.filter(allGames,{'loser':team});
+function formatTeamStats(allGames:TEAM_BOXSCORES[],team:string) : GAME_TEAM_STATS {
+    let wins = <TEAM_BOXSCORES[]> _.filter(allGames,{'winner':team});
+    let loses = <TEAM_BOXSCORES[]> _.filter(allGames,{'loser':team});
 
-    let upAtHalf = _.filter(allGames,{'half_winner':team});
-    let upAtHalfWin = _.filter(upAtHalf,{'winner':team});//_.filter(allGames,{'half_winner':team[0],'winner':team[0]});
-    let downAtHalf = _.filter(allGames,{'half_loser':team});
-    let downAtHalfWin = _.filter(downAtHalf,{'winner':team});
-    let tiesAtHalf = _.filter(allGames,{'half_winner':'Tied'});
-    let tiesAtHalfWin = _.filter(tiesAtHalf,{'winner':team});
+    let upAtHalf = <TEAM_BOXSCORES[]> _.filter(allGames,{'half_winner':team});
+    let upAtHalfWin = <TEAM_BOXSCORES[]> _.filter(upAtHalf,{'winner':team});//_.filter(allGames,{'half_winner':team[0],'winner':team[0]});
+    let downAtHalf = <TEAM_BOXSCORES[]> _.filter(allGames,{'half_loser':team});
+    let downAtHalfWin = <TEAM_BOXSCORES[]> _.filter(downAtHalf,{'winner':team});
+    let tiesAtHalf = <TEAM_BOXSCORES[]> _.filter(allGames,{'half_winner':'Tied'});
+    let tiesAtHalfWin = <TEAM_BOXSCORES[]> _.filter(tiesAtHalf,{'winner':team});
 
     return {
         team,
@@ -280,7 +413,7 @@ function formatTeamStats(allGames:TEAM_BOXSCORES[],team:string) : any {
         downAtHalfWin,
         tiesAtHalfWin,
 
-        hwPerc: parseFloat(formatFloat(upAtHalf.length===0 ? 0 : (upAtHalfWin.length / upAtHalf.length * 100))).toFixed(2)+'%',
-        downAtHalfWinPerc: parseFloat(formatFloat(downAtHalf.length===0 ? 0 : (downAtHalfWin.length / downAtHalf.length * 100))).toFixed(2)+'%'
+        hwPerc: parseFloat(formatFloat(upAtHalf.length===0 ? 0 : (upAtHalfWin.length / upAtHalf.length * 100))).toFixed(2),
+        downAtHalfWinPerc: parseFloat(formatFloat(downAtHalf.length===0 ? 0 : (downAtHalfWin.length / downAtHalf.length * 100))).toFixed(2)
     };
 }
