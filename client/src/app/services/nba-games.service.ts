@@ -17,15 +17,15 @@ export class NbaService {
 
   constructor(private socket: Socket) { }
 
-  updateOdds(refresh:boolean=false) {
+  updateOdds(refresh:boolean=true) {
     this.socket.emit('refresh-nba-odds',refresh);
   }
 
-  updateSeason(refresh:boolean=false) {
+  updateSeason(refresh:boolean=true) {
     this.socket.emit('refresh-nba-season',refresh);
   }
 
-  getUpcomingGAmes(refresh:boolean=false) {
+  getUpcomingGames(refresh:boolean=false) {
     this.socket.emit('nba-upcoming-games-stats',refresh)
   }
 }

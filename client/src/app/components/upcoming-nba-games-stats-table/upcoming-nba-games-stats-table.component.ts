@@ -28,7 +28,7 @@ export class UpcomingNbaGamesStatsTableComponent implements OnInit, OnDestroy, A
       this.dataSource.data = data;
     });
 
-    this.nbaService.getUpcomingGAmes();
+    this.nbaService.getUpcomingGames();
   }
 
   ngOnDestroy() {
