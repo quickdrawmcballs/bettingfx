@@ -7,6 +7,8 @@ import { doSeason as NBASeason } from './nba/statsRetreiver';
 import { doOdds } from './utils/oddsEngine';
 import { getUpcomingGameStats } from './nba/statsEngine';
 
+import { RequestError } from '../../models/lib/serverErrors';
+
 const documents:any = {};
 
 const PORT = 8001;
@@ -36,30 +38,30 @@ async function run() {
     });
 
     io.on('connection', (socket)=>{
-        let previousId:string;
+        // let previousId:string;
 
-        const safeJoin = (currentId:string) => {
-            socket.leave(previousId);
-            socket.join(currentId, () => console.log(`Socket ${socket.id} joined room ${currentId}`));
-            previousId = currentId;
-        };
+        // const safeJoin = (currentId:string) => {
+        //     socket.leave(previousId);
+        //     socket.join(currentId, () => console.log(`Socket ${socket.id} joined room ${currentId}`));
+        //     previousId = currentId;
+        // };
 
-        socket.on('getDoc', (docId:string) => {
-            safeJoin(docId);
-            socket.emit('document', documents[docId]);
-        });
+        // socket.on('getDoc', (docId:string) => {
+        //     safeJoin(docId);
+        //     socket.emit('document', documents[docId]);
+        // });
 
-        socket.on('addDoc', (doc:any) => {
-            documents[doc.id] = doc;
-            safeJoin(doc.id);
-            io.emit('documents', Object.keys(documents));
-            socket.emit('document', doc);
-        });
+        // socket.on('addDoc', (doc:any) => {
+        //     documents[doc.id] = doc;
+        //     safeJoin(doc.id);
+        //     io.emit('documents', Object.keys(documents));
+        //     socket.emit('document', doc);
+        // });
 
-        socket.on('editDoc', (doc:any) => {
-            documents[doc.id] = doc;
-            socket.to(doc.id).emit('document', doc);
-        });
+        // socket.on('editDoc', (doc:any) => {
+        //     documents[doc.id] = doc;
+        //     socket.to(doc.id).emit('document', doc);
+        // });
 
         // io.emit('documents', Object.keys(documents));
 
@@ -74,11 +76,11 @@ async function run() {
             }
             catch (error) {
                 Logger.error(error);
-                socket.emit('server_error',{
-                    message: 'Error Updating Odds',
-                    details: 'An Error has occured updating Odds',
+                socket.emit('server_error', new RequestError(
+                    `Error Updating Odds`,
+                    `An Error has occured updating Odds`,
                     error
-                });
+                ));
             }
         });
 
@@ -90,11 +92,11 @@ async function run() {
             }
             catch (error) {
                 Logger.error(error);
-                socket.emit('server_error',{
-                    message: 'Error Updating NBA Season',
-                    details: 'An Error has occured updating NBA Season',
+                socket.emit('server_error', new RequestError(
+                    `Error Updating NBA Season`,
+                    `An Error has occured updating NBA Season`,
                     error
-                });
+                ));
             }
         });
 
@@ -106,21 +108,21 @@ async function run() {
             }
             catch (error) {
                 Logger.error(error);
-                socket.emit('server_error',{
-                    message: `Error Updating NBA Upcoming Games`,
-                    details: `An Error has occured updating NBA Upcoming Games`,
+                socket.emit('server_error', new RequestError(
+                    `Error Updating NBA Upcoming Games`,
+                    `An Error has occured updating NBA Upcoming Games`,
                     error
-                });
+                ));
             }
         });
 
         socket.on('error', (error:any)=>{
             Logger.error(error);
-            socket.emit('server_error',{
-                message: 'Socket.IO Error',
-                details: 'An Error has occured with the web sockets',
+            socket.emit('server_error', new RequestError(
+                `Socket.IO Error`,
+                `An Error has occured with the web sockets`,
                 error
-            });
+            ));
         })
 
         console.log(`Socket ${socket.id} has connected`);

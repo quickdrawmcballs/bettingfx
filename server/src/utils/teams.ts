@@ -1,17 +1,11 @@
 import _ from 'lodash';
 
 import { Config } from '../config';
+import { TEAM } from '../../../models/lib/teams';
 
 export const teams = Config.teams||{};
 export const NBA_TEAMS = _.filter(teams,['league','NBA']);
 export const NFL_TEAMS = _.filter(teams,['league','NFL']);
-
-export interface TEAM {
-  city: string;
-  team: string,
-  full: string,
-  league: string;
-}
 
 /**
  * getTeamName - get Team from defined list in config by any field

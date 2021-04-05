@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 
 import { NbaService } from 'src/app/services/nba-games.service';
-import { UpcomingGameStats } from 'src/app/models/nba-stats.model';
+import { UPCOMING_GAME_STATS } from '../../../../../models/lib/teams';
 
 @Component({
   selector: 'app-upcoming-nba-games-stats-table',
@@ -17,14 +17,14 @@ export class UpcomingNbaGamesStatsTableComponent implements OnInit, OnDestroy, A
   // 'time',
   columnsToDisplay = ['date', 'home', 'homeSeason.hwPerc', 'homeSeason.downAtHalfWinPerc',
     'away', 'awaySeason.hwPerc', 'awaySeason.downAtHalfWinPerc', 'odds_spread', 'odds_vig'];
-  dataSource = new MatTableDataSource<UpcomingGameStats>([]);
+  dataSource = new MatTableDataSource<UPCOMING_GAME_STATS>([]);
 
   constructor(private nbaService: NbaService) { }
 
   ngOnInit(): void {
     this._nbaSub = this.nbaService.upcomingGamesStats
-    .subscribe( (data:UpcomingGameStats[]) => {
-      console.log(`Retreived Games Successfully`);
+    .subscribe( (data:UPCOMING_GAME_STATS[]) => {
+      console.log(`Retreived Upcoming Games Successfully`);
       this.dataSource.data = data;
     });
 
@@ -41,5 +41,3 @@ export class UpcomingNbaGamesStatsTableComponent implements OnInit, OnDestroy, A
     this.dataSource.sort = this.sort;
   }
 }
-
-let ELEMENT_DATA: UpcomingGameStats[] = [];

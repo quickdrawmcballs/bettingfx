@@ -1,0 +1,20 @@
+{
+    "files": [],
+    "references": [
+      {
+        "path": "./client"
+      },
+      {
+        "path": "./models"
+      },
+      {
+        "path": "./server"
+      }
+    ],
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "buildAll": "tsc -b server client",
+      "build-server": "tsc -b server",
+      "build-client": "tsc -b client"
+    },
+  }

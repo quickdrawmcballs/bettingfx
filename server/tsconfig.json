@@ -11,17 +11,29 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
 
-    "declaration": true,
     "sourceMap": true,
     "outDir": "./lib",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    
+    "moduleResolution": "node"
+
+    // "declaration": true,
+    // "declarationMap": true,
+    // "composite": true,
+
+    // "paths": {"@models" : ["../models"]},
 
   },
   "files": [
     "typings/typings.d.ts"
   ],
+  "references": [
+    { 
+      "path": "../models/" 
+    }
+  ],
 
   // "include": ["src/*.ts","src/**/*.ts"],
-  "include": ["src/*.ts", "src/utils/*.ts", "src/nfl/sportRadar.ts", "src/nfl/sportsOdds.ts", "src/nfl/mlEngine.ts", "src/nfl/oddsEngine.ts", "src/nfl/statsRetreiver.ts","typing/typings.d.ts"],
+  "include": ["src/*.ts", "src/utils/*.ts", "src/nba/*.ts", "src/nfl/*.ts", "typing/typings.d.ts"],
   "exclude": ["node_modules","*/src/*.bak.ts"]
 }

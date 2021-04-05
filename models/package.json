@@ -1,0 +1,18 @@
+{
+  "name": "models",
+  "version": "1.0.1",
+  "description": "",
+  "main": "lib/models.js",
+  "typings": "lib/models.d.ts",
+  "module": "lib/models.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublishOnly": "tsc -b ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^3.9.9"
+  }
+}

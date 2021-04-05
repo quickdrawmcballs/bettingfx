@@ -3,8 +3,7 @@ import { Socket } from 'ngx-socket-io';
 
 import { NBAOdds } from '../models/nba-odds.model';
 import { NBASeason } from '../models/nba-season.model';
-import { UpcomingGameStats } from '../models/nba-stats.model';
-
+import { UPCOMING_GAME_STATS } from '../../../../models/lib/teams';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +12,7 @@ export class NbaService {
 
   oddsNBA = this.socket.fromEvent<NBAOdds[]>('oddsNBA');
   seasonNBA = this.socket.fromEvent<NBASeason[]>('seasonNBA');
-  upcomingGamesStats = this.socket.fromEvent<UpcomingGameStats[]>('UpcomingNBAGamesStats')
+  upcomingGamesStats = this.socket.fromEvent<UPCOMING_GAME_STATS[]>('UpcomingNBAGamesStats')
 
   constructor(private socket: Socket) { }
 
