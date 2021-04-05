@@ -1,6 +1,7 @@
 export declare class RequestError {
     message: string;
     details: string;
-    error?: any;
+    error?: Error;
+    constructor(message: string, details: string, error?: Error);
 }
 //# sourceMappingURL=serverErrors.d.ts.map

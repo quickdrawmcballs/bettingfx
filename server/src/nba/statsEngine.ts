@@ -97,7 +97,8 @@ let analysis:SCORE_ANALYSIS[] = [];
 let upcomingGames:Game[] = [];
 
 async function updateBoxscores(refresh?: boolean) {
-    
+    team_boxscores.clear();
+
     let { json } = await doSeason(refresh);
 
     json.forEach( (game:any) => {
@@ -416,7 +417,7 @@ function formatTeamStats(allGames:TEAM_BOXSCORES[],team:string) : GAME_TEAM_STAT
         downAtHalfWin,
         tiesAtHalfWin,
 
-        hwPerc: parseFloat(formatFloat(upAtHalf.length===0 ? 0 : (upAtHalfWin.length / upAtHalf.length * 100))).toFixed(2),
+        hwPerc: upAtHalf.length===0 ? '-1' : parseFloat(formatFloat((upAtHalfWin.length / upAtHalf.length * 100))).toFixed(2),
         downAtHalfWinPerc: downAtHalf.length===0 ? '-1' : parseFloat(formatFloat((downAtHalfWin.length / downAtHalf.length * 100))).toFixed(2)
     };
 }
