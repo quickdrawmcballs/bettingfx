@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { NBAOdds } from 'src/app/models/nba-odds.model';
 import { NbaService } from 'src/app/services/nba-games.service';
+import { NbaOdds } from '../../../../../models/lib/teams';
 
 @Component({
   selector: 'app-nba-refresh-odds',
@@ -17,7 +17,7 @@ export class NbaRefreshOddsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._nbaSub = this.nbaService.oddsNBA
-    .subscribe( (data:NBAOdds[]) => {
+    .subscribe( (data:NbaOdds[]) => {
       console.log(`Refresh of Odds Successful`);
     });
   }

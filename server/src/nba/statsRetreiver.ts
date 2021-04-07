@@ -1,12 +1,10 @@
 import _ from 'lodash';
 
 import { Logger } from '../logging';
-import { getTeamName } from '../utils/teams';
-import { convertToCsv, createDatedFileName, outputToFile, readFromFile } from '../utils/output';
+import { outputToFile, readFromFile } from '../utils/output';
 import { sleep } from '../utils/utils';
 
 import { getSchedule, getGameBoxScore } from './sportRadar';
-import { csv } from 'd3';
 
 const AWAIT_REQUEST_MS = 1500;
 
@@ -14,14 +12,6 @@ interface Team {
   id: string;
   name: string;
   alias: string
-}
-
-interface Scoring_Period {
-  id: string;
-  number:string;
-  away_points: number;
-  home_points: number; 
-  period_type: string;
 }
 
 interface Game {
@@ -38,12 +28,6 @@ interface Game {
   title: string;
 }
 
-interface Scoring {
-  away_points: number;
-  home_points: number;
-  period: Scoring_Period[];
-}
-
 interface Venue {
   id: string;
   name: string;
@@ -53,66 +37,7 @@ interface Venue {
 
 interface BoxScore {}
 
-
-const fields = [
-  {
-    value:'week'
-  },
-  {
-    value:'id'
-  },
-  {
-    value:'scheduled'
-  },
-  {
-    label:'home_team',
-    value:'home_team'
-  },
-  {
-    label:'away_team',
-    value:'away_team'
-  },
-  {
-    label:'home_points',
-    value:'scoring.home_points'
-  },
-  {
-    label:'away_points',
-    value:'scoring.away_points'
-  },
-  {
-    label:'home_total_rushing_yards',
-    value:'home_total_rushing_yards'
-  },
-  {
-    label:'away_total_rushing_yards',
-    value:'away_total_rushing_yards'
-  },
-  {
-    label:'home_total_passing_yards',
-    value:'home_total_passing_yards'
-  },
-  {
-    label:'away_total_passing_yards',
-    value:'away_total_passing_yards'
-  }
-]
-
-const transform = (entry:any) => {
-  try {
-    entry.home_team = getTeamName(entry.home.name);
-    entry.away_team = getTeamName(entry.away.name);
-
-  }
-  catch (err) {
-    Logger.error(err);
-  }
-
-  return entry;
-};
-
-export async function doSeason(refresh?:boolean) : Promise<any> {
-  try {
+export async function doSeason(refresh?:boolean) : Promise<{csv:string,json:any}> {
     let games:Game[] = await _getSchedule(refresh);
 
     // get played games, exclude all star games
@@ -146,10 +71,6 @@ export async function doSeason(refresh?:boolean) : Promise<any> {
       csv,
       json: boxScores
     }
-  }
-  catch(err) {
-    Logger.error(err);
-  }
 }
 
 function _convertToCSV(boxScores:any[]) : string {

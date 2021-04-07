@@ -75,4 +75,14 @@ export interface GAME_TEAM_STATS {
     hwPerc: string;
     downAtHalfWinPerc: string;
 }
+export declare class NbaOdds {
+    id?: string;
+    date: string;
+    home_team: string;
+    away_team: string;
+    odds_source?: string;
+    odds_last_update?: string;
+    odds_spread?: string;
+    odds_vig?: string;
+}
 //# sourceMappingURL=teams.d.ts.map

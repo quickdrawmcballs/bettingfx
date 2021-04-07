@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { mean } from 'd3';
 
-import { TEAM, Team, TEAM_BOXSCORES, TeamBoxScores, SCORE_ANALYSIS, UPCOMING_GAME_STATS, 
+import { TEAM_BOXSCORES, TeamBoxScores, SCORE_ANALYSIS, UPCOMING_GAME_STATS, 
     GAME_TEAM_STATS } from '../../../models/lib/teams';
 
 import { doSeason } from './statsRetreiver';
@@ -9,88 +9,6 @@ import { getTeam } from '../utils/teams';
 import { formatFloat } from '../utils/utils';
 import { getOdds, Game } from '../utils/oddsEngine';
 import { Logger } from '../logging';
-
-// interface TEAM_BOXSCORES extends TEAM {
-//     games: {
-//         away: any[];
-//         home: any[];
-//     };
-//     getAllGames() : any[];
-//     getLastGames(num:number) : any[];
-// }
-// class TeamBoxScores implements TEAM_BOXSCORES {
-//     city: string = '';
-//     team: string = '';
-//     full: string = '';
-//     league: string = '';
-//     games: { away: any[]; home: any[]; } = {away:[],home:[]};
-
-//     constructor(team:TEAM) {
-//         // super(team);
-//         this.city = team.city;
-//         this.team = team.team;
-//         this.full = team.full;
-//         this.league = team.league;
-//     }
-
-//     getAllGames = () => _.sortBy(this.games.home.concat(this.games.away),'game.scheduled');
-//     getLastGames = (num:number) => {
-//         let all = this.getAllGames();
-        
-//         return all.slice(Math.max(all.length - num, 1));
-//     }
-// }
-
-// // h_q1, h_q2, h_half, h_q3, h_q4, h_2half, h_total, a_q1, a_q2, a_half, a_q3, a_q4, a_2half, a_total, ftr
-// interface SCORE_ANALYSIS {
-//     h_team: TEAM;
-//     h_q1: number;
-//     h_q2: number;
-//     h_q3: number;
-//     h_q4: number;
-//     h_half: number;
-//     h_2half: number;
-//     h_OT?: number;
-//     h_total:number;
-
-//     a_team: TEAM;
-//     a_q1: number;
-//     a_q2: number;
-//     a_q3: number;
-//     a_q4: number;
-//     a_half: number;
-//     a_2half: number;
-//     a_OT?: number;
-//     a_total:number;
-
-//     ftr: string;
-// }
-
-// interface UPCOMING_GAME_STATS {
-//     date: string;
-//     home: string;
-//     away: string;
-//     homeSeason: GAME_TEAM_STATS;
-//     awaySeason: GAME_TEAM_STATS;
-//     homeLast9: GAME_TEAM_STATS;
-//     awayLast9: GAME_TEAM_STATS;
-//     odds_spread: string | undefined,
-//     odds_vig: string | undefined
-// }
-
-// interface GAME_TEAM_STATS {
-//     team:string;
-//     allGames:TEAM_BOXSCORES[];
-//     wins:TEAM_BOXSCORES[];
-//     loses:TEAM_BOXSCORES[];
-//     downAtHalf:TEAM_BOXSCORES[];
-//     upAtHalfWin:TEAM_BOXSCORES[];
-//     downAtHalfWin:TEAM_BOXSCORES[];
-//     tiesAtHalfWin:TEAM_BOXSCORES[];
-
-//     hwPerc: string;
-//     downAtHalfWinPerc: string;
-// }
 
 const team_boxscores = new Map();
 let analysis:SCORE_ANALYSIS[] = [];

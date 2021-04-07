@@ -15,8 +15,8 @@ export class NbaRefreshSeasonComponent implements OnInit, OnDestroy {
   constructor(private nbaService: NbaService) { }
 
   ngOnInit(): void {
-    this._nbaSub = this.nbaService.oddsNBA
-    .subscribe( (data:NBASeason[]) => {
+    this._nbaSub = this.nbaService.seasonNBA
+    .subscribe( (data:{csv:string,json:any}) => {
       console.log(`Refresh of Nba Season Successful`);
     });
   }

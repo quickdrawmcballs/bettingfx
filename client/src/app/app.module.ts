@@ -4,6 +4,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input'
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 
@@ -20,6 +22,7 @@ import { NbaRefreshOddsComponent } from './components/nba-refresh-odds/nba-refre
 import { NbaRefreshSeasonComponent } from './components/nba-refresh-season/nba-refresh-season.component';
 import { UpcomingNbaGamesStatsTableComponent } from './components/upcoming-nba-games-stats-table/upcoming-nba-games-stats-table.component';
 
+
 const config: SocketIoConfig = { url: 'http://localhost:8001', options:{}}; // withCredentials: false
 
 @NgModule({
@@ -27,6 +30,8 @@ const config: SocketIoConfig = { url: 'http://localhost:8001', options:{}}; // w
     AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,
+    MatInputModule,
+    MatFormFieldModule,
     MatTableModule,
     MatSortModule,
     FormsModule,

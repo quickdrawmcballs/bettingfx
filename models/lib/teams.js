@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TeamBoxScores = exports.Team = void 0;
+exports.NbaOdds = exports.TeamBoxScores = exports.Team = void 0;
 class Team {
     constructor() {
         this.city = "";
@@ -30,4 +30,12 @@ class TeamBoxScores {
     }
 }
 exports.TeamBoxScores = TeamBoxScores;
+class NbaOdds {
+    constructor() {
+        this.date = "";
+        this.home_team = "";
+        this.away_team = "";
+    }
+}
+exports.NbaOdds = NbaOdds;
 //# sourceMappingURL=teams.js.map

@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 
-import { NBAOdds } from '../models/nba-odds.model';
-import { NBASeason } from '../models/nba-season.model';
-import { UPCOMING_GAME_STATS } from '../../../../models/lib/teams';
+
+// import { NBASeason } from '../models/nba-season.model';
+import { NbaOdds, UPCOMING_GAME_STATS } from '../../../../models/lib/teams';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class NbaService {
 
-  oddsNBA = this.socket.fromEvent<NBAOdds[]>('oddsNBA');
-  seasonNBA = this.socket.fromEvent<NBASeason[]>('seasonNBA');
+  oddsNBA = this.socket.fromEvent<NbaOdds[]>('oddsNBA');
+  seasonNBA = this.socket.fromEvent<{csv:string,json:any}>('seasonNBA');
   upcomingGamesStats = this.socket.fromEvent<UPCOMING_GAME_STATS[]>('UpcomingNBAGamesStats')
 
   constructor(private socket: Socket) { }
