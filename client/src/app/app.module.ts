@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input'
 import { MatTableModule } from '@angular/material/table';
@@ -21,6 +22,7 @@ import { DocumentListComponent } from './components/document-list/document-list.
 import { NbaRefreshOddsComponent } from './components/nba-refresh-odds/nba-refresh-odds.component';
 import { NbaRefreshSeasonComponent } from './components/nba-refresh-season/nba-refresh-season.component';
 import { UpcomingNbaGamesStatsTableComponent } from './components/upcoming-nba-games-stats-table/upcoming-nba-games-stats-table.component';
+import { ErrorManagerComponent } from './components/error-manager/error-manager.component';
 
 
 const config: SocketIoConfig = { url: 'http://localhost:8001', options:{}}; // withCredentials: false
@@ -31,6 +33,7 @@ const config: SocketIoConfig = { url: 'http://localhost:8001', options:{}}; // w
     BrowserModule,
     BrowserAnimationsModule,
     MatInputModule,
+    MatDialogModule,
     MatFormFieldModule,
     MatTableModule,
     MatSortModule,
@@ -46,7 +49,8 @@ const config: SocketIoConfig = { url: 'http://localhost:8001', options:{}}; // w
     DocumentListComponent,
     NbaRefreshOddsComponent,
     NbaRefreshSeasonComponent,
-    UpcomingNbaGamesStatsTableComponent
+    UpcomingNbaGamesStatsTableComponent,
+    ErrorManagerComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -9,6 +9,7 @@ import { getTeam } from '../utils/teams';
 import { formatFloat } from '../utils/utils';
 import { getOdds, Game } from '../utils/oddsEngine';
 import { Logger } from '../logging';
+import { convertToCsv, createDatedFileName, outputToFile } from '../utils/output';
 
 const team_boxscores = new Map();
 let analysis:SCORE_ANALYSIS[] = [];
@@ -205,15 +206,15 @@ export async function calc(refresh?:boolean) {
         let h_q2_win = _.filter(analysis,(game:SCORE_ANALYSIS)=> game.ftr === 'H' && (game.h_q2 > game.a_q2));
         let h_q3_win = _.filter(analysis,(game:SCORE_ANALYSIS)=> game.ftr === 'H' && (game.h_q3 > game.a_q3));
         let h_q4_win = _.filter(analysis,(game:SCORE_ANALYSIS)=> game.ftr === 'H' && (game.h_q4 > game.a_q4));
-        let h_half_win = _.filter(analysis,(game:SCORE_ANALYSIS)=> game.ftr === 'H' && (game.h_half > game.a_half));
+        let h_half_win = _.filter(allGamesNoHalfTies,(game:SCORE_ANALYSIS)=> game.ftr === 'H' && (game.h_half > game.a_half));
 
         let a_q1_win = _.filter(analysis,(game:SCORE_ANALYSIS)=> game.ftr === 'A' && (game.h_q1 < game.a_q1));
         let a_q2_win = _.filter(analysis,(game:SCORE_ANALYSIS)=> game.ftr === 'A' && (game.h_q2 < game.a_q2));
         let a_q3_win = _.filter(analysis,(game:SCORE_ANALYSIS)=> game.ftr === 'A' && (game.h_q3 < game.a_q3));
         let a_q4_win = _.filter(analysis,(game:SCORE_ANALYSIS)=> game.ftr === 'A' && (game.h_q4 < game.a_q4));
-        let a_half_win = _.filter(analysis,(game:SCORE_ANALYSIS)=> game.ftr === 'A' && (game.h_half < game.a_half));
+        let a_half_win = _.filter(allGamesNoHalfTies,(game:SCORE_ANALYSIS)=> game.ftr === 'A' && (game.h_half < game.a_half));
 
-        let ties = _.filter(analysis,(game:SCORE_ANALYSIS)=> game.h_half === game.a_half);
+        // let ties = _.filter(analysis,(game:SCORE_ANALYSIS)=> game.h_half === game.a_half);
 
         // console.log(`Win rate of home 1st Quarter ${ formatFloat(h_q1_win.length / homes.length * 100) }`);
         // console.log(`Win rate of home 2nd Quarter ${ formatFloat(h_q2_win.length / homes.length * 100) }`);
@@ -233,7 +234,8 @@ export async function calc(refresh?:boolean) {
         let q2_win = _.filter(analysis,(game:SCORE_ANALYSIS)=> game.ftr === 'A' ? (game.h_q2 < game.a_q2) : (game.h_q2 > game.a_q2));
         let q3_win = _.filter(analysis,(game:SCORE_ANALYSIS)=> game.ftr === 'A' ? (game.h_q3 < game.a_q3) : (game.h_q3 > game.a_q3));
         let q4_win = _.filter(analysis,(game:SCORE_ANALYSIS)=> game.ftr === 'A' ? (game.h_q4 < game.a_q4) : (game.h_q4 > game.a_q4));
-        let half_win = _.filter(analysis,(game:SCORE_ANALYSIS)=> game.ftr === 'A' ? (game.h_half < game.a_half) : (game.h_half > game.a_half));
+        let half_win = _.filter(allGamesNoHalfTies,(game:SCORE_ANALYSIS)=> game.ftr === 'A' ? (game.h_half < game.a_half) : (game.h_half > game.a_half));
+        let half_lose = _.filter(allGamesNoHalfTies,(game:SCORE_ANALYSIS)=> game.ftr === 'A' ? (game.h_half > game.a_half) : (game.h_half < game.a_half));
         
         // console.log(`Win rate of 1st Quarter ${ formatFloat(q1_win.length / analysis.length * 100) }`);
         // console.log(`Win rate of 2nd Quarter ${ formatFloat(q2_win.length / analysis.length * 100) }`);
@@ -282,10 +284,70 @@ export async function calc(refresh?:boolean) {
         });
 
         console.log('-----------------');
+
+        let pd_analysis = getPointDifferiential(half_lose);
+        let csv:string = convertToCsv(pd_analysis,{fields:[
+            { label: 'Winner', value:'winner'},
+            { label: 'Loser', value:'loser'},
+            { label: 'Half Winner', value:'half_winner'},
+            { label: 'Half Loser', value:'half_loser'},
+            { label: 'Half Diff', value:'half_diff'},
+            { label: 'Full Diff', value:'ftr_diff'}
+        ]});
+
+        if (csv!=='') {
+            Logger.debug(`Creating csv file from odds diff`);
+            // create the odds file
+            await outputToFile(createDatedFileName(`diffs.csv`),csv);
+        }
+        console.log('-----------------');
+
     } 
     catch (err) {
         Logger.error(err);
     }
+}
+
+function getPointDifferiential(gameStats:SCORE_ANALYSIS[]) : any[]{
+
+    let retVal = _.map(gameStats,(game:SCORE_ANALYSIS)=>{
+        let winner:string;
+        let loser: string;
+        let half_winner:string;
+        let half_loser:string;
+
+        if (game.ftr === 'H') {
+            winner = game.h_team.full;
+            loser = game.a_team.full;
+        }
+        else {
+            winner = game.a_team.full;
+            loser = game.h_team.full;
+        }
+        if (game.h_half > game.a_half) {
+            half_winner = game.h_team.full;
+            half_loser = game.a_team.full;
+        }
+        else {
+            half_winner = game.a_team.full;
+            half_loser = game.h_team.full;
+        }
+
+        // differentials
+        let half_diff = Math.abs(game.h_half-game.a_half);
+        let ftr_diff = Math.abs(game.h_total-game.a_total);
+
+        return _.merge(game, {
+           winner,
+           loser,
+           half_winner,
+           half_loser,
+           half_diff,
+           ftr_diff 
+        });
+    })
+
+    return retVal;
 }
 
 function getUpcomingGames(refresh?:boolean) {

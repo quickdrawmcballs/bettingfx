@@ -9,7 +9,6 @@ import { dfdTest, train } from './nfl/mlEngine';
 import { calc } from './nba/statsEngine';
 
 import { doSeason as NBASeason } from './nba/statsRetreiver';
-import { testing } from './test';
 
 const argv = yargs(hideBin(process.argv)).argv;
 const dateFormat = 'MM/D h:mm A';
@@ -53,8 +52,6 @@ async function run() {
     // train();
   }
   else if (_.isEqual(mode,'nba_play')) {
-    // testing();
-
     let refresh = (/true/i).test(String(_.get(argv,'refresh')));
     Logger.info(`NBA Stats...`);
     calc(refresh);
