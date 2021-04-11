@@ -10,6 +10,7 @@ import { formatFloat } from '../utils/utils';
 import { getOdds, Game } from '../utils/oddsEngine';
 import { Logger } from '../logging';
 import { convertToCsv, createDatedFileName, outputToFile } from '../utils/output';
+import { scheduled } from 'rxjs';
 
 const team_boxscores = new Map();
 let analysis:SCORE_ANALYSIS[] = [];
@@ -119,10 +120,37 @@ export async function getUpcomingGameStats(refresh:boolean=false) : Promise<UPCO
     return upcoming;
 }
 
+export async function getChartingGamStats({team, homeOrAway, lastX}:{team:string,homeOrAway?:string,lastX?:number}) {
+    let _team = getTeam(team);
+
+    let teamGames = _.filter(analysis,(game:SCORE_ANALYSIS)=> {
+        if ('home' === homeOrAway) return game.h_team.full === _team.full;
+        else if ('away' === homeOrAway) return game.a_team.full === _team.full;
+        else return (game.h_team.full === _team.full) || (game.a_team.full === _team.full)
+    });
+    if (lastX) {
+        teamGames = _.takeRight(teamGames,lastX)
+    }    
+
+    let allGamesNoHalfTies = _.filter(teamGames,(game:SCORE_ANALYSIS)=> game.h_half !== game.a_half);
+    let half_win = _.filter(allGamesNoHalfTies,(game:SCORE_ANALYSIS)=> game.ftr === 'A' ?  (game.a_team.full === _team.full && game.h_half < game.a_half) : 
+        (game.h_team.full === _team.full && game.h_half > game.a_half));
+    let half_lose = _.filter(allGamesNoHalfTies,(game:SCORE_ANALYSIS)=> game.ftr === 'A' ? ((game.a_team.full === _team.full) && game.h_half > game.a_half) : 
+        (game.h_team.full === _team.full && game.h_half < game.a_half));
+    
+    return {
+        team,
+        homeOrAway,
+        lastX,
+        half_win_pd: getPointDifferiential(half_win),
+        half_lose_pd: getPointDifferiential(half_lose)
+    }
+}
+
 export async function calc(refresh?:boolean) {
     // let team_boxscores:{ [key:string]:TEAM_BOXSCORES } = {};
     let team_boxscores = new Map();
-    let analysis:SCORE_ANALYSIS[] = [];
+    analysis = [];
 
     try {
         let { json } = await doSeason(refresh);
@@ -181,7 +209,8 @@ export async function calc(refresh?:boolean) {
                 a_2half: game.game_stats.away.scoring[2].points + game.game_stats.away.scoring[3].points,
                 a_total: game.game_stats.away.points,
 
-                ftr: (game.game_stats.home.points>game.game_stats.away.points) ? 'H' : 'A'
+                ftr: (game.game_stats.home.points>game.game_stats.away.points) ? 'H' : 'A',
+                scheduled: game.scheduled
             });
         });
 
@@ -271,35 +300,64 @@ export async function calc(refresh?:boolean) {
         console.log('---- Tonite ----');
 
         let upcoming = await getOdds({sport:'basketball_nba',display:'nba'},false);
-        upcoming.forEach((game:Game)=>{
+        let consTable = upcoming.map((game:Game)=>{
             let home = getTeam(game.home_team);
             let away = getTeam(game.away_team);
 
             let homeBuilt = allTeamsSeasonStats[home.full];
             let awayBuilt = allTeamsSeasonStats[away.full];
+            let homeLast9Built = allTeamsLastXStats[home.full];
+            let awayLast9Built = allTeamsLastXStats[away.full];
 
-            console.log(`${game.date}\t${away.full} (${awayBuilt.wins.length}-${awayBuilt.loses.length}): ${awayBuilt.hwPerc}, ${awayBuilt.downAtHalfWinPerc}\t@ ` + 
-                `${home.full} (${homeBuilt.wins.length}-${homeBuilt.loses.length}): ${homeBuilt.hwPerc}, ${homeBuilt.downAtHalfWinPerc}\t${game.odds_spread} ${game.odds_vig}`);
+            return {
+                date: game.date,
+                away: `${away.full} (${awayBuilt.wins.length}-${awayBuilt.loses.length}): ${awayBuilt.hwPerc}, ${awayLast9Built.upAtHalfResults}, ${awayLast9Built.downAtHalfResults}`,
+                home: `${home.full} (${homeBuilt.wins.length}-${homeBuilt.loses.length}): ${homeBuilt.hwPerc}, ${homeLast9Built.upAtHalfResults}, ${homeLast9Built.downAtHalfResults}`,
+                odds: `${game.odds_spread} ${game.odds_vig}`
+            }
+
+            // return {
+            //     date: game.date,
+            //     away: away.full,
+            //     awayRecord: `(${awayBuilt.wins.length}-${awayBuilt.loses.length})`,
+            //     'awayH%W': awayBuilt.hwPerc,
+            //     awayLast9W: awayLast9Built.upAtHalfResults,
+            //     awayLast9C: awayLast9Built.downAtHalfResults,
+            //     home: home.full,
+            //     homeRecord: `(${homeBuilt.wins.length}-${homeBuilt.loses.length})`,
+            //     'homeH%W': homeBuilt.hwPerc,
+            //     homeLast9W: homeLast9Built.upAtHalfResults,
+            //     homeLast9C: homeLast9Built.downAtHalfResults,
+            //     odds: game.odds_spread
+            // }
+
+            // console.log(`${game.date}\t${away.full} (${awayBuilt.wins.length}-${awayBuilt.loses.length}): ${awayBuilt.hwPerc}, ${awayLast9Built.upAtHalfResults}, ${awayLast9Built.downAtHalfResults}\t@ ` + 
+            //     `${home.full} (${homeBuilt.wins.length}-${homeBuilt.loses.length}): ${homeBuilt.hwPerc}, ${homeLast9Built.upAtHalfResults}, ${homeLast9Built.downAtHalfResults}\t${game.odds_spread} ${game.odds_vig}`);
 
         });
+        console.table(consTable);
 
-        console.log('-----------------');
+        // console.log('-----------------');
 
-        let pd_analysis = getPointDifferiential(half_lose);
-        let csv:string = convertToCsv(pd_analysis,{fields:[
-            { label: 'Winner', value:'winner'},
-            { label: 'Loser', value:'loser'},
-            { label: 'Half Winner', value:'half_winner'},
-            { label: 'Half Loser', value:'half_loser'},
-            { label: 'Half Diff', value:'half_diff'},
-            { label: 'Full Diff', value:'ftr_diff'}
-        ]});
+        // let pd_analysis = getPointDifferiential(half_lose);
+        // let csv:string = convertToCsv(pd_analysis,{fields:[
+        //     { label: 'Winner', value:'winner'},
+        //     { label: 'Loser', value:'loser'},
+        //     { label: 'Half Winner', value:'half_winner'},
+        //     { label: 'Half Loser', value:'half_loser'},
+        //     { label: 'Half Diff', value:'half_diff'},
+        //     { label: 'Full Diff', value:'ftr_diff'}
+        // ]});
 
-        if (csv!=='') {
-            Logger.debug(`Creating csv file from odds diff`);
-            // create the odds file
-            await outputToFile(createDatedFileName(`diffs.csv`),csv);
-        }
+        // if (csv!=='') {
+        //     Logger.debug(`Creating csv file from odds diff`);
+        //     // create the odds file
+        //     await outputToFile(createDatedFileName(`diffs.csv`),csv);
+        // }
+        // console.log('-----------------');
+
+        // let getIt = await getChartingGamStats({team:'Lakers',lastX:9});
+
         console.log('-----------------');
 
     } 
@@ -398,6 +456,9 @@ function formatTeamStats(allGames:TEAM_BOXSCORES[],team:string) : GAME_TEAM_STAT
         tiesAtHalfWin,
 
         hwPerc: upAtHalf.length===0 ? '-1' : parseFloat(formatFloat((upAtHalfWin.length / upAtHalf.length * 100))).toFixed(2),
-        downAtHalfWinPerc: downAtHalf.length===0 ? '-1' : parseFloat(formatFloat((downAtHalfWin.length / downAtHalf.length * 100))).toFixed(2)
+        downAtHalfWinPerc: downAtHalf.length===0 ? '-1' : parseFloat(formatFloat((downAtHalfWin.length / downAtHalf.length * 100))).toFixed(2),
+
+        upAtHalfResults: `${upAtHalfWin.length}-${upAtHalf.length-upAtHalfWin.length}`,
+        downAtHalfResults: `${downAtHalfWin.length}-${downAtHalf.length-downAtHalfWin.length}`
     };
 }

@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
-import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,6 +10,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 
 import { FormsModule } from '@angular/forms';
+
+import { AppRoutingModule } from './app-routing.module';
+
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 import { AppComponent } from './app.component';
@@ -23,6 +25,7 @@ import { NbaRefreshOddsComponent } from './components/nba-refresh-odds/nba-refre
 import { NbaRefreshSeasonComponent } from './components/nba-refresh-season/nba-refresh-season.component';
 import { UpcomingNbaGamesStatsTableComponent } from './components/upcoming-nba-games-stats-table/upcoming-nba-games-stats-table.component';
 import { ErrorManagerComponent } from './components/error-manager/error-manager.component';
+import { DiffChartComponent } from './components/diff-chart/diff-chart.component';
 
 
 const config: SocketIoConfig = { url: 'http://localhost:8001', options:{}}; // withCredentials: false
@@ -32,6 +35,7 @@ const config: SocketIoConfig = { url: 'http://localhost:8001', options:{}}; // w
     AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,
+    FlexLayoutModule,
     MatInputModule,
     MatDialogModule,
     MatFormFieldModule,
@@ -50,7 +54,8 @@ const config: SocketIoConfig = { url: 'http://localhost:8001', options:{}}; // w
     NbaRefreshOddsComponent,
     NbaRefreshSeasonComponent,
     UpcomingNbaGamesStatsTableComponent,
-    ErrorManagerComponent
+    ErrorManagerComponent,
+    DiffChartComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

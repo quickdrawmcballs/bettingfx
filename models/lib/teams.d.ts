@@ -51,6 +51,8 @@ export interface SCORE_ANALYSIS {
     a_OT?: number;
     a_total: number;
     ftr: string;
+    scheduled?: string;
+    id?: string;
 }
 export interface UPCOMING_GAME_STATS {
     date: string;
@@ -74,6 +76,8 @@ export interface GAME_TEAM_STATS {
     tiesAtHalfWin: TEAM_BOXSCORES[];
     hwPerc: string;
     downAtHalfWinPerc: string;
+    upAtHalfResults: string;
+    downAtHalfResults: string;
 }
 export declare class NbaOdds {
     id?: string;
