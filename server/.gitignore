@@ -47,6 +47,6 @@ Thumbs.db
 
 #project
 /lib/
-/game_stats
+/output
 /config/debug.json
 /config/sportsOdds.json

@@ -41,9 +41,7 @@ export async function doSeason(refresh?:boolean) : Promise<{csv:string,json:any}
     let games:Game[] = await _getSchedule(refresh);
 
     // get played games, exclude all star games
-    // games = _.filter(games,['status','closed']);
-    // games = _.filter(games,['title', '2021 NBA All-Star Game']);
-    games = _.filter(games,(game:Game) => (game.status === 'closed') && 
+    games = _.filter(games,(game:Game)=>(game.status === 'closed') && 
       !(/All-Star Game/i).test(game.title));
 
     await sleep(AWAIT_REQUEST_MS);
@@ -51,7 +49,7 @@ export async function doSeason(refresh?:boolean) : Promise<{csv:string,json:any}
     let boxScores:any[] = [];
     for (let i = 0; i < games.length; i++) {
       let game = games[i];
-      let game_stats:any = await _getOrCreateFile('./output/game_stats/nba/' + game.id, async ()=>{
+      let game_stats:any = await _getOrCreateFile('./output/game_stats/mlb/' + game.id, async ()=>{
         let stats = await getGameBoxScore(game.id);
         await sleep(AWAIT_REQUEST_MS);
         return stats;
@@ -61,31 +59,18 @@ export async function doSeason(refresh?:boolean) : Promise<{csv:string,json:any}
 
     Logger.info(`Finishined retreiving all ${games.length} games`);
 
-    let csv:string = _convertToCSV([]);
+    // let csv:string = _convertToCSV([]);
 
     return {
-      csv,
+      csv: '',
       json: boxScores
     }
-}
-
-function _convertToCSV(boxScores:any[]) : string {
-    // let csv:string = convertToCsv(boxScores,{fields,transforms:[transform]})
-
-    // if (csv!=='') {
-    //   Logger.debug(`Creating csv file from this week's odds`);
-    //   // create the odds file
-    //   await outputToFile(createDatedFileName('season.csv'),csv);
-    //   Logger.info(`Created Season Results successful`);
-    // }
-
-    return '';
 }
 
 async function _getSchedule(refresh:boolean=false) : Promise<any> {
   let seasonData:any;
   try {
-    let file = await readFromFile('./NBA_SeasonData2020.json');
+    let file = await readFromFile('./MLB_SeasonData2021.json');
     seasonData = ( refresh || !file) ? undefined : JSON.parse(file);
   }
   catch (err) {
@@ -99,7 +84,7 @@ async function _getSchedule(refresh:boolean=false) : Promise<any> {
     seasonData = _.get(resp,'data.games',[]);
 
     // write the json to file
-    await outputToFile('./NBA_SeasonData2020.json',JSON.stringify(seasonData));
+    await outputToFile('./MLB_SeasonData2021.json',JSON.stringify(seasonData));
   }
 
   return seasonData;
@@ -119,7 +104,7 @@ async function _getGameStats(gameId:string) : Promise<any> {
 
     gameData = _.get(resp,'data',{});
 
-    await outputToFile('./output/nba/game_stats/' + gameId,JSON.stringify(gameData));
+    await outputToFile('./output/mlb/game_stats/' + gameId,JSON.stringify(gameData));
   }
 
   return gameData;
