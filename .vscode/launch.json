@@ -89,6 +89,15 @@
             "runtimeExecutable": "npm",
             "runtimeArgs": ["run-script", "main", "--", "nba_play","--refresh=false"],
             "outputCapture": "std"
+        },
+        {
+            "name": "mlb_season",
+            "type": "pwa-node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/server",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run-script", "main", "--", "mlb_season","--refresh=true"],
+            "outputCapture": "std"
         }
     ]
 }

@@ -9,8 +9,6 @@ import { getTeam } from '../utils/teams';
 import { formatFloat } from '../utils/utils';
 import { getOdds, Game } from '../utils/oddsEngine';
 import { Logger } from '../logging';
-import { convertToCsv, createDatedFileName, outputToFile } from '../utils/output';
-import { scheduled } from 'rxjs';
 
 const team_boxscores = new Map();
 let analysis:SCORE_ANALYSIS[] = [];

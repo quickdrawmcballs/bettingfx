@@ -6,7 +6,7 @@ import { Logger } from '../logging';
 const api_key:string = Config.sportRadar.mlb_api;
 const ret_format:string = Config.sportRadar.format;
 
-const preURL = "http://api.sportradar.us/mlb/trial/v7/en/";
+const preURL = 'http://api.sportradar.us/mlb/trial/v7/en/';
 
 /// Export Section
 export const getSchedule = (year?:string,season?:string) => request(buildSchedule(year,season));

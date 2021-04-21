@@ -68,15 +68,9 @@ export async function doSeason(refresh?:boolean) : Promise<{csv:string,json:any}
 }
 
 async function _getSchedule(refresh:boolean=false) : Promise<any> {
-  let seasonData:any;
-  try {
-    let file = await readFromFile('./MLB_SeasonData2021.json');
-    seasonData = ( refresh || !file) ? undefined : JSON.parse(file);
-  }
-  catch (err) {
-    Logger.error(err);
-    seasonData = undefined;
-  }  
+
+  let file = await readFromFile('./MLB_SeasonData2021.json');
+  let seasonData:any = ( refresh || !file) ? undefined : JSON.parse(file);
 
   if (!seasonData) {
     let resp = await getSchedule();
@@ -88,26 +82,6 @@ async function _getSchedule(refresh:boolean=false) : Promise<any> {
   }
 
   return seasonData;
-}
-
-async function _getGameStats(gameId:string) : Promise<any> {
-  // look locally
-  let gameData:any;
-  try {
-    gameData = await readFromFile('./output/game_stats/' + gameId);
-  } catch (err) {
-    Logger.error(err);
-    gameData = undefined;
-  }
-  if (!gameData) {
-    let resp = await getGameBoxScore(gameId);
-
-    gameData = _.get(resp,'data',{});
-
-    await outputToFile('./output/mlb/game_stats/' + gameId,JSON.stringify(gameData));
-  }
-
-  return gameData;
 }
 
 type RetrieveFunction = (...args: any) => Promise<any>;

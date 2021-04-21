@@ -7,8 +7,8 @@ import { doOdds } from './utils/oddsEngine';
 import { doSeason as NFLSeason } from './nfl/statsRetreiver';
 import { dfdTest, train } from './nfl/mlEngine';
 import { calc } from './nba/statsEngine';
-
 import { doSeason as NBASeason } from './nba/statsRetreiver';
+import { doSeason as MLBSeason } from './mlb/statsRetreiver';
 
 const argv = yargs(hideBin(process.argv)).argv;
 const dateFormat = 'MM/D h:mm A';
@@ -26,7 +26,12 @@ interface Game {
 async function run() {
   let mode = _.get(argv,['_','0']);
 
-  if (_.isEqual(mode,'nfl_odds')) {
+  if (_.isEqual(mode,'dfd')) {
+    Logger.info(`Tensor Flow...`);
+    dfdTest();
+    // train();
+  }
+  else if (_.isEqual(mode,'nfl_odds')) {
     let refresh = (/true/i).test(String(_.get(argv,'refresh')));
     Logger.info(`Running NFL odds... Refresh:${refresh}`);
     doOdds({sport:'americanfootball_nfl',display:'nfl'},refresh);
@@ -46,15 +51,15 @@ async function run() {
     Logger.info(`Running season... Refresh:${refresh}`);
     NBASeason(refresh);
   }
-  else if (_.isEqual(mode,'dfd')) {
-    Logger.info(`Tensor Flow...`);
-    dfdTest();
-    // train();
-  }
   else if (_.isEqual(mode,'nba_play')) {
     let refresh = (/true/i).test(String(_.get(argv,'refresh')));
     Logger.info(`NBA Stats...`);
     calc(refresh);
+  }
+  else if (_.isEqual(mode,'mlb_season')) {
+    let refresh = (/true/i).test(String(_.get(argv,'refresh')));
+    Logger.info(`MLB Stats...`);
+    MLBSeason(refresh);
   }
   
   else {
