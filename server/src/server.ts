@@ -3,9 +3,10 @@ import { Server } from "socket.io";
 import express from 'express';
 
 import { Logger } from './logging';
-import { doSeason as NBASeason } from './nba/statsRetreiver';
+import { getPlayedGames as NBASeason } from './nba/statsRetreiver';
 import { doOdds } from './utils/oddsEngine';
-import { getUpcomingGameStats } from './nba/statsEngine';
+// import { getUpcomingGameStats, getUpcomingGameStatsNew } from './nba/statsEngine';
+import { getUpcomingGameStats } from './nba/statsService';
 
 import { RequestError } from '../../models/lib/serverErrors';
 
@@ -103,7 +104,7 @@ async function run() {
         socket.on('nba-upcoming-games-stats', async (refresh:boolean)=>{
             Logger.info(`Running upcoming games stats... Refresh:${refresh}`);
             try {
-                let stats = await getUpcomingGameStats(refresh);
+                let stats = await getUpcomingGameStats({refreshFromSource:refresh});
                 socket.emit('UpcomingNBAGamesStats', stats);
             }
             catch (error) {

@@ -1,0 +1,19 @@
+<h1>{{title}}</h1>
+<!-- <nav>
+    <a [routerLink]="['/analyze/:team',{team:'home'}]" routerLinkActive="active">Home</a>
+    <a [routerLink]="['/analyze/:team',{team:'away'}]" routerLinkActive="active">Away</a>
+</nav>
+<router-outlet></router-outlet> -->
+
+<ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+    <li [ngbNavItem]="1">
+        <!-- <a ngbNavLink [routerLink]="['/chart/:team',{team:'home'}]" routerLinkActive="active">Home</a> -->
+        <a ngbNavLink [routerLink]="['/nba/analyze', 'home']" routerLinkActive="active">Home</a>
+    </li>
+    <li [ngbNavItem]="2">
+        <!-- <a ngbNavLink [routerLink]="['/chart/:team',{team:'away'}]" routerLinkActive="active">Away</a> -->
+        <a ngbNavLink [routerLink]="['/nba/analyze', 'away']" routerLinkActive="active">Away</a>
+    </li>
+</ul>
+
+<router-outlet></router-outlet>

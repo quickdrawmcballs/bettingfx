@@ -3,7 +3,7 @@ import { Socket } from 'ngx-socket-io';
 
 
 // import { NBASeason } from '../models/nba-season.model';
-import { NbaOdds, UPCOMING_GAME_STATS } from '../../../../models/lib/teams';
+import { UPCOMING_GAME_STATS, NbaOdds } from '../../../../models/lib/teams';
 
 
 @Injectable({

@@ -55,7 +55,7 @@ export interface SCORE_ANALYSIS {
     id?: string;
 }
 export interface UPCOMING_GAME_STATS {
-    date: string;
+    date: number;
     home: string;
     away: string;
     homeSeason: GAME_TEAM_STATS;
@@ -88,5 +88,17 @@ export declare class NbaOdds {
     odds_last_update?: string;
     odds_spread?: string;
     odds_vig?: string;
+}
+export interface DISPLAY_UPCOMING_GAMES {
+    date: number;
+    away: string;
+    aHLWPerc: string;
+    aLastXUp: string;
+    aLastXDo: string;
+    home: string;
+    hHLWPerc: string;
+    hLastXUp: string;
+    hLastXDo: string;
+    odds: string;
 }
 //# sourceMappingURL=teams.d.ts.map

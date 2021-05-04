@@ -1,0 +1,60 @@
+<mat-form-field>
+  <mat-label>Filter</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Heat" #input>
+</mat-form-field>
+
+<!-- <table matSort (matSortChange)="sortData($event)" class="table">
+    <tr>
+      <th mat-sort-header="date">Date</th>
+      <th mat-sort-header="away">Away</th>
+      <th mat-sort-header="aHLWPerc">Up@Half W%</th>
+      <th mat-sort-header="aLastXUp">L9 U@H</th>
+      <th mat-sort-header="aLastXDo">L9 D@H</th>
+      <th mat-sort-header="home">Home</th>
+      <th mat-sort-header="hHLWPerc">Up@Half W%</th>
+      <th mat-sort-header="hLastXUp">L9 U@H</th>
+      <th mat-sort-header="hLastXDo">L9 D@H</th>
+      <th mat-sort-header="odds">Odds</th>
+    </tr>
+  
+    <tr *ngFor="let game of sortedData">
+      <td>{{game.date | momentPipe: 'h:mm'}}</td>
+      <td>{{game.away}}</td>
+      <td class="stat-column">{{game.aHLWPerc}}</td>
+      <td class="stat-column">{{game.aLastXUp}}</td>
+      <td class="stat-column">{{game.aLastXDo}}</td>
+      <td>{{game.home}}</td>
+      <td class="stat-column">{{game.hHLWPerc}}</td>
+      <td class="stat-column">{{game.hLastXUp}}</td>
+      <td class="stat-column">{{game.hLastXDo}}</td>
+      <td>{{game.odds}}</td>
+    </tr>
+</table>-->
+
+<table matSort (matSortChange)="sortData($event)" class="table">
+  <tr>
+    <th mat-sort-header="date">Date</th>
+    <th mat-sort-header="away">Away</th>
+    <th mat-sort-header="aHLWPerc">Up@Half W%</th>
+    <th mat-sort-header="aLastXUp">L9 U@H</th>
+    <th mat-sort-header="aLastXDo">L9 D@H</th>
+    <th mat-sort-header="home">Home</th>
+    <th mat-sort-header="hHLWPerc">Up@Half W%</th>
+    <th mat-sort-header="hLastXUp">L9 U@H</th>
+    <th mat-sort-header="hLastXDo">L9 D@H</th>
+    <th mat-sort-header="odds">Odds</th>
+  </tr>
+
+  <tr *ngFor="let game of sortedData" (click)="rowSelected(game);">
+    <td>{{game.date | momentPipe: 'h:mm'}}</td>
+    <td>{{game.away}}</td>
+    <td class="stat-column">{{game.awaySeason.hwPerc}}</td>
+    <td class="stat-column">{{game.awayLast9.upAtHalfResults}}</td>
+    <td class="stat-column">{{game.awayLast9.downAtHalfWinPerc}}</td>
+    <td>{{game.home}}</td>
+    <td class="stat-column">{{game.homeSeason.hwPerc}}</td>
+    <td class="stat-column">{{game.homeLast9.upAtHalfResults}}</td>
+    <td class="stat-column">{{game.homeLast9.downAtHalfResults}}</td>
+    <td>{{game.odds_spread}} {{game.odds_vig}}</td>
+  </tr>
+</table>

@@ -1,10 +1,12 @@
 import _ from 'lodash';
 import { mean } from 'd3';
+import moment from 'moment';
 
 import { TEAM_BOXSCORES, TeamBoxScores, SCORE_ANALYSIS, UPCOMING_GAME_STATS, 
-    GAME_TEAM_STATS } from '../../../models/lib/teams';
+    GAME_TEAM_STATS, 
+    DISPLAY_UPCOMING_GAMES} from '../../../models/lib/teams';
 
-import { doSeason } from './statsRetreiver';
+import { getPlayedGames, getRemainingGames } from './statsRetreiver';
 import { getTeam } from '../utils/teams';
 import { formatFloat } from '../utils/utils';
 import { getOdds, Game } from '../utils/oddsEngine';
@@ -13,11 +15,12 @@ import { Logger } from '../logging';
 const team_boxscores = new Map();
 let analysis:SCORE_ANALYSIS[] = [];
 let upcomingGames:Game[] = [];
+let remainingGames:any = {};
 
 async function updateBoxscores(refresh?: boolean) {
     team_boxscores.clear();
 
-    let { json } = await doSeason(refresh);
+    let { json } = await getPlayedGames(refresh);
 
     json.forEach( (game:any) => {
         let h_team = getTeam(game.home.name);
@@ -82,9 +85,13 @@ async function updateUpcomingGames(refresh?:boolean) {
     upcomingGames = await getOdds({sport:'basketball_nba',display:'nba'},refresh);
 }
 
+async function updateRemainingGames(refresh?:boolean) {
+    remainingGames = await getRemainingGames(refresh);
+}
+
 export async function getUpcomingGameStats(refresh:boolean=false) : Promise<UPCOMING_GAME_STATS[]> {
 
-    await Promise.all([updateBoxscores(refresh), updateUpcomingGames(refresh)]);
+    await Promise.all([updateBoxscores(refresh), updateUpcomingGames(refresh), updateRemainingGames(refresh)]);
 
     const allTeamsSeasonStats = getAllTeamStats(team_boxscores);
     const lastXSeasonStats = getLastTeamStats(team_boxscores,9);
@@ -114,6 +121,47 @@ export async function getUpcomingGameStats(refresh:boolean=false) : Promise<UPCO
             odds_vig: game.odds_vig
         }
     });
+    
+    return upcoming;
+}
+export async function getUpcomingGameStatsNew(refresh:boolean=false) : Promise<DISPLAY_UPCOMING_GAMES[]> {
+
+    await Promise.all([updateBoxscores(refresh), updateUpcomingGames(refresh)]);
+
+    const allTeamsSeasonStats = getAllTeamStats(team_boxscores);
+    const lastXSeasonStats = getLastTeamStats(team_boxscores,9);
+
+    const upcoming = upcomingGames.map((game:Game)=>{
+        const home = getTeam(game.home_team);
+        const away = getTeam(game.away_team);
+
+        const homeSeason = allTeamsSeasonStats[home.full];
+        const awaySeason = allTeamsSeasonStats[away.full];
+        
+        const homeLastNine = lastXSeasonStats[home.full];
+        const awayLastNine = lastXSeasonStats[away.full];
+
+        // console.log(`${game.date}\t${away.full} (${awaySeason.wins.length}-${awaySeason.loses.length}): ${awaySeason.hwPerc}, ${awayLastNine.downAtHalfWinPerc}\t@ ` + 
+        //     `${home.full} (${homeSeason.wins.length}-${homeSeason.loses.length}): ${homeSeason.hwPerc}, ${homeLastNine.downAtHalfWinPerc}\t${game.odds_spread} ${game.odds_vig}`);
+
+        return {
+            // date: moment(game.date).format('h:mm'),
+            date: moment(game.date).valueOf(),
+
+            away: `${away.full} (${awaySeason.wins.length}-${awaySeason.loses.length})`,
+            aHLWPerc: `${awaySeason.hwPerc}`,
+            aLastXUp: awayLastNine.upAtHalfResults,
+            aLastXDo: awayLastNine.downAtHalfResults,
+            
+            home: `${home.full} (${homeSeason.wins.length}-${homeSeason.loses.length})`,
+            hHLWPerc: `${homeSeason.hwPerc}`,
+            hLastXUp: homeLastNine.upAtHalfResults,
+            hLastXDo: homeLastNine.downAtHalfResults,
+            odds: `${game.odds_spread} (${game.odds_vig})`
+        } as DISPLAY_UPCOMING_GAMES;
+    });
+
+    console.table(upcoming);
     
     return upcoming;
 }
@@ -151,7 +199,7 @@ export async function calc(refresh?:boolean) {
     analysis = [];
 
     try {
-        let { json } = await doSeason(refresh);
+        let { json } = await getPlayedGames(refresh);
 
         json.forEach( (game:any) => {
             let h_team = getTeam(game.home.name);
@@ -308,7 +356,7 @@ export async function calc(refresh?:boolean) {
             let awayLast9Built = allTeamsLastXStats[away.full];
 
             return {
-                date: game.date,
+                date: moment(game.date).format('LT'),
                 away: `${away.full} (${awayBuilt.wins.length}-${awayBuilt.loses.length}): ${awayBuilt.hwPerc}, ${awayLast9Built.upAtHalfResults}, ${awayLast9Built.downAtHalfResults}`,
                 home: `${home.full} (${homeBuilt.wins.length}-${homeBuilt.loses.length}): ${homeBuilt.hwPerc}, ${homeLast9Built.upAtHalfResults}, ${homeLast9Built.downAtHalfResults}`,
                 odds: `${game.odds_spread} ${game.odds_vig}`

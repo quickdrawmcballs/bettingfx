@@ -5,28 +5,10 @@
 
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
-  <!-- Home Column -->
+  <!-- Date Column -->
   <ng-container matColumnDef="date">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Time </th>
       <td mat-cell *matCellDef="let game"> {{game.date}} </td>
-  </ng-container>
-
-  <!-- Home Column -->
-  <ng-container matColumnDef="home">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Home </th>
-    <td mat-cell *matCellDef="let game"> {{game.home}} </td>
-  </ng-container>
-
-  <!-- Home Up At Half Win% Column -->
-  <ng-container matColumnDef="homeSeason.hwPerc">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Up@Half W% </th>
-    <td mat-cell *matCellDef="let game"> {{game.homeSeason.hwPerc}} </td>
-  </ng-container>
-
-  <!-- Home Down At Half Win% Column -->
-  <ng-container matColumnDef="homeSeason.downAtHalfWinPerc">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Down@Half W% </th>
-    <td mat-cell *matCellDef="let game"> {{game.homeSeason.downAtHalfWinPerc}} </td>
   </ng-container>
 
   <!-- Away Column -->
@@ -35,29 +17,54 @@
     <td mat-cell *matCellDef="let game"> {{game.away}} </td>
   </ng-container>
 
-  <!-- Away Up At Half Win% Column -->
-  <ng-container matColumnDef="awaySeason.hwPerc">
+  <!-- Away Up At Half Season Win% Column -->
+  <ng-container matColumnDef="aHLWPerc">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Up@Half W% </th>
-    <td mat-cell *matCellDef="let game"> {{game.awaySeason.hwPerc}} </td>
+    <td mat-cell *matCellDef="let game"> {{game.aHLWPerc}} </td>
   </ng-container>
 
-  <!-- Away Down At Half Win% Column -->
-  <ng-container matColumnDef="awaySeason.downAtHalfWinPerc">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Down@Half W% </th>
-    <td mat-cell *matCellDef="let game"> {{game.awaySeason.downAtHalfWinPerc}} </td>
+  <!-- Home Last 9 Up At Half Win% Column -->
+  <ng-container matColumnDef="aLastXUp">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> L9 Up@Hf W% </th>
+    <td mat-cell *matCellDef="let game"> {{game.aLastXUp}} </td>
+  </ng-container>
+
+  <!-- Home Last 9 down At Half Win% Column -->
+  <ng-container matColumnDef="aLastXDo">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> L9 Do@Hf W% </th>
+    <td mat-cell *matCellDef="let game"> {{game.aLastXDo}} </td>
+  </ng-container>
+
+  <!-- Home Column -->
+  <ng-container matColumnDef="home">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Home </th>
+    <td mat-cell *matCellDef="let game"> {{game.home}} </td>
+  </ng-container>
+
+  <!-- Away Up At Half Season Win% Column -->
+  <ng-container matColumnDef="hHLWPerc">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Up@Half W% </th>
+    <td mat-cell *matCellDef="let game"> {{game.hHLWPerc}} </td>
+  </ng-container>
+
+  <!-- Home Last 9 Up At Half Win% Column -->
+  <ng-container matColumnDef="hLastXUp">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> L9 Up@Hf W% </th>
+    <td mat-cell *matCellDef="let game"> {{game.hLastXUp}} </td>
+  </ng-container>
+
+  <!-- Home Last 9 down At Half Win% Column -->
+  <ng-container matColumnDef="hLastXDo">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> L9 Do@Hf W% </th>
+    <td mat-cell *matCellDef="let game"> {{game.hLastXDo}} </td>
   </ng-container>
 
   <!-- Spread Column -->
-  <ng-container matColumnDef="odds_spread">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Spread </th>
-    <td mat-cell *matCellDef="let game"> {{game.odds_spread}} </td>
+  <ng-container matColumnDef="odds">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Odds </th>
+    <td mat-cell *matCellDef="let game"> {{game.odds}} </td>
   </ng-container>
 
-  <!-- Vig Column -->
-  <ng-container matColumnDef="odds_vig">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> vig </th>
-    <td mat-cell *matCellDef="let game"> {{game.odds_vig}} </td>
-  </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
   <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>

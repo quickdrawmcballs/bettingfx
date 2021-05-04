@@ -7,7 +7,7 @@ import { doOdds } from './utils/oddsEngine';
 import { doSeason as NFLSeason } from './nfl/statsRetreiver';
 import { dfdTest, train } from './nfl/mlEngine';
 import { calc } from './nba/statsEngine';
-import { doSeason as NBASeason } from './nba/statsRetreiver';
+import { getPlayedGames as NBASeason } from './nba/statsRetreiver';
 import { doSeason as MLBSeason } from './mlb/statsRetreiver';
 
 const argv = yargs(hideBin(process.argv)).argv;

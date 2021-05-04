@@ -177,8 +177,8 @@
         "affectsGlobalScope": false
       },
       "../teams.ts": {
-        "version": "01754ebd3d148f6423d9353611bad4813f5e7356a72a6b2cb1b565500fd947a3",
-        "signature": "11603503ac54883f117845544db36fbd16b61cfd1fa4af43c6da09e098b04049",
+        "version": "7ac1e80bdaee9eb5ad98f9a882ca5700c86390933a6fe352e74122b17b655b5a",
+        "signature": "39d2358ad4e1a330ef960ef9dbd2c7a0eb4744a9627b431063005c82e3d47904",
         "affectsGlobalScope": false
       },
       "../models.ts": {

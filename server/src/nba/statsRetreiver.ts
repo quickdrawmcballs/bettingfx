@@ -37,35 +37,52 @@ interface Venue {
 
 interface BoxScore {}
 
-export async function doSeason(refresh?:boolean) : Promise<{csv:string,json:any}> {
-    let games:Game[] = await _getSchedule(refresh);
+export async function getPlayedGames(refresh?:boolean) : Promise<{csv:string,json:any}> {
+  let games:Game[] = await _getSchedule(refresh);
 
-    // get played games, exclude all star games
-    // games = _.filter(games,['status','closed']);
-    // games = _.filter(games,['title', '2021 NBA All-Star Game']);
-    games = _.filter(games,(game:Game) => (game.status === 'closed') && 
-      !(/All-Star Game/i).test(game.title));
+  // get played games, exclude all star games
+  // games = _.filter(games,['status','closed']);
+  // games = _.filter(games,['title', '2021 NBA All-Star Game']);
+  games = _.filter(games,(game:Game) => (game.status === 'closed') && 
+    !(/All-Star Game/i).test(game.title));
 
-    await sleep(AWAIT_REQUEST_MS);
-    Logger.info(`Retreiving ${games.length} stats. Each request will wait ${AWAIT_REQUEST_MS/1000}s, this could take a while.`)
-    let boxScores:any[] = [];
-    for (let i = 0; i < games.length; i++) {
-      let game = games[i];
-      let game_stats:any = await _getOrCreateFile('./output/game_stats/nba/' + game.id, async ()=>{
-        let stats = await getGameBoxScore(game.id);
-        await sleep(AWAIT_REQUEST_MS);
-        return stats;
-      });
-      boxScores.push(_.merge(game,{game_stats}));
-    }
+  await sleep(AWAIT_REQUEST_MS);
+  Logger.info(`Retreiving ${games.length} stats. Each request will wait ${AWAIT_REQUEST_MS/1000}s, this could take a while.`)
+  let boxScores:any[] = [];
+  for (let i = 0; i < games.length; i++) {
+    let game = games[i];
+    let game_stats:any = await _getOrCreateFile('./output/game_stats/nba/' + game.id, async ()=>{
+      let stats = await getGameBoxScore(game.id);
+      await sleep(AWAIT_REQUEST_MS);
+      return stats;
+    });
+    boxScores.push(_.merge(game,{game_stats}));
+  }
 
-    Logger.info(`Finishined retreiving all ${games.length} games`);
+  Logger.info(`Finishined retreiving all ${games.length} games`);
+
+  let csv:string = _convertToCSV([]);
+
+  return {
+    csv,
+    json: boxScores
+  }
+}
+
+export async function getRemainingGames(refresh?:boolean) : Promise<{csv:string,json:any}> {
+  let games:Game[] = await _getSchedule(refresh);
+
+  // get played games, exclude all star games
+  // games = _.filter(games,['status','closed']);
+  // games = _.filter(games,['title', '2021 NBA All-Star Game']);
+  games = _.filter(games,(game:Game) => ((game.status === 'scheduled') || (game.status === 'time-tbd') && 
+    !(/All-Star Game/i).test(game.title)));
 
     let csv:string = _convertToCSV([]);
 
     return {
       csv,
-      json: boxScores
+      json: games
     }
 }
 

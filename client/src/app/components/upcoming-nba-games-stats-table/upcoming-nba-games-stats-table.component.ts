@@ -14,9 +14,7 @@ import { UPCOMING_GAME_STATS } from '../../../../../models/lib/teams';
 export class UpcomingNbaGamesStatsTableComponent implements OnInit, OnDestroy, AfterViewInit {
   private _nbaSub: Subscription;
 
-  // 'time',
-  columnsToDisplay = ['date', 'home', 'homeSeason.hwPerc', 'homeSeason.downAtHalfWinPerc',
-    'away', 'awaySeason.hwPerc', 'awaySeason.downAtHalfWinPerc', 'odds_spread', 'odds_vig'];
+  columnsToDisplay = ['date', 'away', 'aHLWPerc', 'aLastXUp', 'aLastXDo', 'home', 'hHLWPerc', 'hLastXUp', 'hLastXDo', 'odds'];
   dataSource = new MatTableDataSource<UPCOMING_GAME_STATS>([]);
 
   constructor(private nbaService: NbaService) { }

@@ -10,7 +10,7 @@ import { iSportType } from './interfaces';
 const dateFormat = 'MM/D hh:mm A';
 
 export interface Game {
-  date: string;
+  date: number;
   home_team: string;
   away_team: string;
   odds_source?: string;
@@ -80,7 +80,7 @@ function _parseGames(games:any[]) : Game[] {
     let firstIsHome = data.teams[0] === data.home_team;
 
     let game:Game = {
-      date: moment(data.commence_time).format(dateFormat),
+      date: moment(data.commence_time).valueOf(),
       home_team: getTeamName(data.home_team),
       away_team: getTeamName(firstIsHome? data.teams[1] : data.teams[0]),
     };
