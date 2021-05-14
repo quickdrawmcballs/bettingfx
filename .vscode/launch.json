@@ -3,6 +3,12 @@
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
+    "compounds": [
+        {
+            "name": "Server/Client",
+            "configurations": ["server","client","Chrome Debugger"]
+        }
+    ],
     "configurations": [
         {
             "type": "pwa-node",

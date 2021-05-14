@@ -4,27 +4,23 @@
   </p>
   
   <div class="d-flex">
-    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills" orientation="vertical">
-      <li ngbNavItem="top">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" (navChange)="onNavChange($event)" [destroyOnHide]="true" class="nav-pills" orientation="vertical">
+      <li ngbNavItem="season">
         <a ngbNavLink>Season</a>
         <ng-template ngbNavContent>
-          <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth
-            master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro
-            keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat
-            salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
+          <p>Season Wins Up at Half Point Differentials</p>
+          <h2>{{team}}</h2>
 
-            <app-scoring-chart class="card-container"></app-scoring-chart>
+          <app-scoring-chart class="card-container" [tab]="'season'"></app-scoring-chart>
         </ng-template>
       </li>
-      <li ngbNavItem="middle">
-        <a ngbNavLink>Middle</a>
+      <li ngbNavItem="last9">
+        <a ngbNavLink>Last 9</a>
         <ng-template ngbNavContent>
-          <p>Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko
-            farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts
-            ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar
-            helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson
-            8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester
-            stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
+          <p>Last 9 Wins Up at Half Point Differentials</p>
+          <h2>{{team}}</h2>
+
+          <app-scoring-chart class="card-container" [tab]="'last9'"></app-scoring-chart>
         </ng-template>
       </li>
       <li ngbNavItem="bottom">

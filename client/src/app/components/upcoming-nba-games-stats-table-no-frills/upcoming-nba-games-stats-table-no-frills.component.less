@@ -1,3 +1,5 @@
+@import "../../../assets/colors.less";
+
 .table {
   th, td {
     padding: .75rem .50rem;
@@ -5,6 +7,17 @@
   th {
     background-color: #EEEEEE;
     font-size:12px;
+  }
+  tbody {
+    tr {
+      &:hover {
+        background-color: @btn-hover;
+        cursor:pointer;
+      }
+      &.selected {
+        background-color: @btn-hover;
+      }
+    }
   }
   td {
     font-size:13px;

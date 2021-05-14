@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { mean } from 'd3';
 import moment from 'moment';
+import * as dfd from 'danfojs-node';
 
 import { TEAM_BOXSCORES, TeamBoxScores, SCORE_ANALYSIS, UPCOMING_GAME_STATS, 
     GAME_TEAM_STATS, 
@@ -164,6 +165,46 @@ export async function getUpcomingGameStatsNew(refresh:boolean=false) : Promise<D
     console.table(upcoming);
     
     return upcoming;
+}
+
+export async function getTeamStats(team:string,upcomingGames?:UPCOMING_GAME_STATS[]) : Promise<any> {
+    // if no upcoming games, grab them
+    if (!upcomingGames) {
+        upcomingGames = await getUpcomingGameStats();
+    }
+
+    let found:{team?:string,last9?:GAME_TEAM_STATS,season?:GAME_TEAM_STATS} = {};
+
+    // find the team
+    _.find(upcomingGames,(game:UPCOMING_GAME_STATS)=>{
+        if (game.away === team) {
+            found.team = game.away;
+            found.last9 = game.awayLast9;
+            found.season = game.awaySeason;
+            return true;
+        }
+        else if(game.home === team) {
+            found.team = game.home;
+            found.last9 = game.homeLast9;
+            found.season = game.homeSeason;
+            return true;
+        }
+    });
+
+    // disect the stats
+    // found.last9
+    let last9Win = new dfd.DataFrame(found.last9?.upAtHalfWin.map( (game:any)=> { 
+        return [Math.abs(game.h_half - game.a_half),1]
+    }),{columns:['diff','count']});
+    let seasonWin = new dfd.DataFrame(found.season?.upAtHalfWin.map( (game:any)=> { 
+        return [Math.abs(game.h_half - game.a_half),1]
+    }),{columns:['diff','count']});
+
+    return {
+        team,
+        last9Win: last9Win.groupby(['diff']).agg({'count':'count'}).data.map( (scoreDiff:any[])=>( {score:scoreDiff[0],count:scoreDiff[1]}) ),
+        seasonWin: seasonWin.groupby(['diff']).agg({'count':'count'}).data.map( (scoreDiff:any[])=>( {score:scoreDiff[0],count:scoreDiff[1]}) )
+    }
 }
 
 export async function getChartingGamStats({team, homeOrAway, lastX}:{team:string,homeOrAway?:string,lastX?:number}) {
@@ -507,4 +548,15 @@ function formatTeamStats(allGames:TEAM_BOXSCORES[],team:string) : GAME_TEAM_STAT
         upAtHalfResults: `${upAtHalfWin.length}-${upAtHalf.length-upAtHalfWin.length}`,
         downAtHalfResults: `${downAtHalfWin.length}-${downAtHalf.length-downAtHalfWin.length}`
     };
+}
+
+function getScoresDiffAgg(scores:TEAM_BOXSCORES[],filter:Function) : any[]{
+
+    let df = new dfd.DataFrame(scores.map( (game:any)=> { 
+        return filter(game);
+    }),{columns:['diff','count']});
+    let grp = df.groupby(['diff']);
+    let agged = grp.agg({'count':'count'});
+
+    return [];
 }

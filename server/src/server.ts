@@ -6,9 +6,11 @@ import { Logger } from './logging';
 import { getPlayedGames as NBASeason } from './nba/statsRetreiver';
 import { doOdds } from './utils/oddsEngine';
 // import { getUpcomingGameStats, getUpcomingGameStatsNew } from './nba/statsEngine';
-import { getUpcomingGameStats } from './nba/statsService';
+import { getTeamStats, getUpcomingGameStats } from './nba/statsService';
 
 import { RequestError } from '../../models/lib/serverErrors';
+import { getTeam } from './utils/teams';
+
 
 const documents:any = {};
 
@@ -117,6 +119,22 @@ async function run() {
             }
         });
 
+        socket.on('nba-team-stats', async (team:string)=>{
+            Logger.info(`Getting Team Stats for: ${team}`);
+            try {
+                let data = await getTeamStats({team});
+                socket.emit('UpcomingNBAGamesStats', data);
+            }
+            catch(error) {
+                Logger.error(error);
+                socket.emit('server_error', new RequestError(
+                    `Error Retreiving NBA Team Stats`,
+                    `An Error has occured retreiving NBA Team Stats for ${team}`,
+                    error
+                ));
+            }
+        });
+
         socket.on('error', (error:any)=>{
             Logger.error(error);
             socket.emit('server_error', new RequestError(
@@ -124,7 +142,7 @@ async function run() {
                 `An Error has occured with the web sockets`,
                 error
             ));
-        })
+        });
 
         console.log(`Socket ${socket.id} has connected`);
     });

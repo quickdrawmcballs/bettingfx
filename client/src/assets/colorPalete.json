@@ -13,5 +13,10 @@
     "pink": "F5CAC3",
 
     "alt_background_yellow": "F2F2EB",
-    "alt_light_grey": "EEEEEE"
+    "alt_light_grey": "EEEEEE",
+
+
+    "button_hover": "f5f5f5"
+
+
 }

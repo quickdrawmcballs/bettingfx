@@ -13,7 +13,8 @@ export class NbaService {
 
   oddsNBA = this.socket.fromEvent<NbaOdds[]>('oddsNBA');
   seasonNBA = this.socket.fromEvent<{csv:string,json:any}>('seasonNBA');
-  upcomingGamesStats = this.socket.fromEvent<UPCOMING_GAME_STATS[]>('UpcomingNBAGamesStats')
+  upcomingGamesStats = this.socket.fromEvent<UPCOMING_GAME_STATS[]>('UpcomingNBAGamesStats');
+  teamStats = this.socket.fromEvent<any>('teamStats');
 
   constructor(private socket: Socket) { }
 
@@ -27,5 +28,9 @@ export class NbaService {
 
   getUpcomingGames(refresh:boolean=false) {
     this.socket.emit('nba-upcoming-games-stats',refresh)
+  }
+  
+  getTeamStats(team:string) {
+    this.socket.emit('nba-team-stats',team);
   }
 }
