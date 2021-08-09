@@ -35,7 +35,7 @@ export class ChartAnalyzerComponent implements OnInit, OnDestroy {
     .subscribe( (data:any) => {
       console.log(`Retreived Upcoming Games Successfully`);
       // this.dataSource.data = data;
-      this.team = data.team;
+      // this.team = data.team;
     });
   }
 

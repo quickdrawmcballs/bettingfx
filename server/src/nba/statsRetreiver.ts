@@ -37,8 +37,18 @@ interface Venue {
 
 interface BoxScore {}
 
-export async function getPlayedGames(refresh?:boolean) : Promise<{csv:string,json:any}> {
-  let games:Game[] = await _getSchedule(refresh);
+export async function getAllPlayedGames(refresh?:boolean,year?:string) : Promise<{csv:string,json:any}> {
+  let wholeYear:any = await Promise.all([getPlayedGames(refresh,year,'REG'),getPlayedGames(refresh,year,'PST')]);
+
+
+  return {
+    csv: '',
+    json: wholeYear.flatMap((cat:any)=>cat.json)
+  };
+}
+
+export async function getPlayedGames(refresh?:boolean,year?:string,season?:string) : Promise<{csv:string,json:any}> {
+  let games:Game[] = await _getSchedule(refresh,year,season);
 
   // get played games, exclude all star games
   // games = _.filter(games,['status','closed']);
@@ -99,10 +109,12 @@ function _convertToCSV(boxScores:any[]) : string {
     return '';
 }
 
-async function _getSchedule(refresh:boolean=false) : Promise<any> {
+async function _getSchedule(refresh:boolean=false,year:string='2020',season:string='REG') : Promise<any> {
   let seasonData:any;
+  let filename = `NBA_${season}SeasonData${year}.json`;
   try {
-    let file = await readFromFile('./NBA_SeasonData2020.json');
+    // let file = await readFromFile('./NBA_SeasonData2020.json');
+    let file = await readFromFile(filename);
     seasonData = ( refresh || !file) ? undefined : JSON.parse(file);
   }
   catch (err) {
@@ -111,12 +123,12 @@ async function _getSchedule(refresh:boolean=false) : Promise<any> {
   }  
 
   if (!seasonData) {
-    let resp = await getSchedule();
+    let resp = await getSchedule(year,season);
 
     seasonData = _.get(resp,'data.games',[]);
 
     // write the json to file
-    await outputToFile('./NBA_SeasonData2020.json',JSON.stringify(seasonData));
+    await outputToFile(filename,JSON.stringify(seasonData));
   }
 
   return seasonData;

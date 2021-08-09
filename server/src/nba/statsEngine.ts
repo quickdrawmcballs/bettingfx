@@ -7,7 +7,7 @@ import { TEAM_BOXSCORES, TeamBoxScores, SCORE_ANALYSIS, UPCOMING_GAME_STATS,
     GAME_TEAM_STATS, 
     DISPLAY_UPCOMING_GAMES} from '../../../models/lib/teams';
 
-import { getPlayedGames, getRemainingGames } from './statsRetreiver';
+import { getAllPlayedGames, getPlayedGames, getRemainingGames } from './statsRetreiver';
 import { getTeam } from '../utils/teams';
 import { formatFloat } from '../utils/utils';
 import { getOdds, Game } from '../utils/oddsEngine';
@@ -240,7 +240,8 @@ export async function calc(refresh?:boolean) {
     analysis = [];
 
     try {
-        let { json } = await getPlayedGames(refresh);
+        // let { json } = await getPlayedGames(refresh);
+        let { json } = await getAllPlayedGames(refresh);
 
         json.forEach( (game:any) => {
             let h_team = getTeam(game.home.name);
