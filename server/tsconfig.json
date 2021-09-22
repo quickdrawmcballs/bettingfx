@@ -34,6 +34,6 @@
   ],
 
   // "include": ["src/*.ts","src/**/*.ts"],
-  "include": ["src/*.ts", "src/utils/*.ts", "src/nba/*.ts", "src/nfl/*.ts", "typing/typings.d.ts"],
+  "include": ["src/*.ts", "src/utils/*.ts", "src/nba/*.ts", "src/nfl/*.ts", "src/standalone/**/*.ts", "typing/typings.d.ts"],
   "exclude": ["node_modules","*/src/*.bak.ts"]
 }

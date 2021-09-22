@@ -104,6 +104,24 @@
             "runtimeExecutable": "npm",
             "runtimeArgs": ["run-script", "main", "--", "mlb_season","--refresh=true"],
             "outputCapture": "std"
+        },
+        {
+            "name": "Stats Odds",
+            "type": "pwa-node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/server",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run-script","main","--","stats_odds"],
+            "outputCapture": "std"
+        },
+        {
+            "name": "Perfect Lineup",
+            "type": "pwa-node",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/server/lib/standalone/projections/generateBestLine.js"
         }
     ]
 }

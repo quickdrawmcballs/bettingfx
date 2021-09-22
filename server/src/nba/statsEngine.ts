@@ -108,7 +108,7 @@ export async function getUpcomingGameStats(refresh:boolean=false) : Promise<UPCO
         const awayLastNine = lastXSeasonStats[away.full];
 
         console.log(`${game.date}\t${away.full} (${awaySeason.wins.length}-${awaySeason.loses.length}): ${awaySeason.hwPerc}, ${awayLastNine.downAtHalfWinPerc}\t@ ` + 
-            `${home.full} (${homeSeason.wins.length}-${homeSeason.loses.length}): ${homeSeason.hwPerc}, ${homeLastNine.downAtHalfWinPerc}\t${game.odds_spread} ${game.odds_vig}`);
+            `${home.full} (${homeSeason.wins.length}-${homeSeason.loses.length}): ${homeSeason.hwPerc}, ${homeLastNine.downAtHalfWinPerc}\t${game.odds_spread} ${game.odds_spread_vig}`);
 
         return {
             date: game.date,
@@ -119,7 +119,7 @@ export async function getUpcomingGameStats(refresh:boolean=false) : Promise<UPCO
             homeLast9:lastXSeasonStats[home.full],
             awayLast9:lastXSeasonStats[away.full],
             odds_spread:game.odds_spread,
-            odds_vig: game.odds_vig
+            odds_vig: game.odds_spread_vig
         }
     });
     
@@ -158,7 +158,7 @@ export async function getUpcomingGameStatsNew(refresh:boolean=false) : Promise<D
             hHLWPerc: `${homeSeason.hwPerc}`,
             hLastXUp: homeLastNine.upAtHalfResults,
             hLastXDo: homeLastNine.downAtHalfResults,
-            odds: `${game.odds_spread} (${game.odds_vig})`
+            odds: `${game.odds_spread} (${game.odds_spread_vig})`
         } as DISPLAY_UPCOMING_GAMES;
     });
 
@@ -401,7 +401,7 @@ export async function calc(refresh?:boolean) {
                 date: moment(game.date).format('LT'),
                 away: `${away.full} (${awayBuilt.wins.length}-${awayBuilt.loses.length}): ${awayBuilt.hwPerc}, ${awayLast9Built.upAtHalfResults}, ${awayLast9Built.downAtHalfResults}`,
                 home: `${home.full} (${homeBuilt.wins.length}-${homeBuilt.loses.length}): ${homeBuilt.hwPerc}, ${homeLast9Built.upAtHalfResults}, ${homeLast9Built.downAtHalfResults}`,
-                odds: `${game.odds_spread} ${game.odds_vig}`
+                odds: `${game.odds_spread} ${game.odds_spread_vig}`
             }
 
             // return {

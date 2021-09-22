@@ -9,6 +9,7 @@ import { dfdTest, train } from './nfl/mlEngine';
 import { calc } from './nba/statsEngine';
 import { getPlayedGames as NBASeason } from './nba/statsRetreiver';
 import { doSeason as MLBSeason } from './mlb/statsRetreiver';
+import { run as statOdds } from './nfl/statsOdds';
 
 const argv = yargs(hideBin(process.argv)).argv;
 const dateFormat = 'MM/D h:mm A';
@@ -62,6 +63,11 @@ async function run() {
     let refresh = (/true/i).test(String(_.get(argv,'refresh')));
     Logger.info(`MLB Stats...`);
     MLBSeason(refresh);
+  }
+  else if (_.isEqual(mode, 'stats_odds')) {
+    // let refresh = (/true/i).test(String(_.get(argv, 'refresh')));
+    Logger.info(`NFL Stat & Odds...`);
+    statOdds();
   }
   
   else {
