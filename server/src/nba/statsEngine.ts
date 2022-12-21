@@ -269,7 +269,7 @@ export async function calc(refresh?:boolean) {
                 home_BoxScore = new TeamBoxScores(h_team);
                 team_boxscores.set(h_team.full,home_BoxScore);
             }
-            home_BoxScore.games.away.push(game);
+            home_BoxScore.games.home.push(game);
 
             let away_BoxScore = <TEAM_BOXSCORES>team_boxscores.get(a_team.full);
             if (!away_BoxScore) {
@@ -397,10 +397,24 @@ export async function calc(refresh?:boolean) {
             let homeLast9Built = allTeamsLastXStats[home.full];
             let awayLast9Built = allTeamsLastXStats[away.full];
 
+            // home up at half wins
+            let homeUpAtHalfLast9 = _.filter(homeLast9Built.upAtHalfWin, (game: any) => game.home.name === home.full);
+            let homeDownAtHalfLast9 = _.filter(homeLast9Built.downAtHalfWin, (game: any) => game.home.name === home.full);
+            let awayUpAtHalfLast9 = _.filter(awayLast9Built.upAtHalfWin, (game: any) => game.away.name === away.full);
+            let awayDownAtHalfLast9 = _.filter(awayLast9Built.downAtHalfWin, (game: any) => game.away.name === away.full);
+
+            let allHome = _.filter(homeLast9Built.allGames, (game: any) => game.home.name === home.full);
+            let allAway = _.filter(awayLast9Built.allGames, (game: any) => game.away.name === away.full);
+
+            let homeUpLast9Results = `${homeUpAtHalfLast9.length}-${Math.max(homeUpAtHalfLast9.length-allHome.length,0)}`;
+            let homeDownLast9Results = `${homeDownAtHalfLast9.length}-${Math.max(homeDownAtHalfLast9.length-allHome.length,0)}`;
+            let awayUpLast9Results = `${awayUpAtHalfLast9.length}-${Math.max(awayUpAtHalfLast9.length-allAway.length,0)}`;
+            let awayDownLast9Results = `${awayDownAtHalfLast9.length}-${Math.max(awayDownAtHalfLast9.length-allAway.length,0)}`;
+            
             return {
                 date: moment(game.date).format('LT'),
-                away: `${away.full} (${awayBuilt.wins.length}-${awayBuilt.loses.length}): ${awayBuilt.hwPerc}, ${awayLast9Built.upAtHalfResults}, ${awayLast9Built.downAtHalfResults}`,
-                home: `${home.full} (${homeBuilt.wins.length}-${homeBuilt.loses.length}): ${homeBuilt.hwPerc}, ${homeLast9Built.upAtHalfResults}, ${homeLast9Built.downAtHalfResults}`,
+                away: `${away.full} (${awayBuilt.wins.length}-${awayBuilt.loses.length}): ${awayBuilt.hwPerc}, ${awayLast9Built.upAtHalfResults}, ${awayLast9Built.downAtHalfResults}, ${awayUpLast9Results}, ${awayDownLast9Results}`,
+                home: `${home.full} (${homeBuilt.wins.length}-${homeBuilt.loses.length}): ${homeBuilt.hwPerc}, ${homeLast9Built.upAtHalfResults}, ${homeLast9Built.downAtHalfResults}, ${homeUpLast9Results}, ${homeDownLast9Results}`,
                 odds: `${game.odds_spread} ${game.odds_spread_vig}`
             }
 

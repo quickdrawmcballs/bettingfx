@@ -109,7 +109,7 @@ function _convertToCSV(boxScores:any[]) : string {
     return '';
 }
 
-async function _getSchedule(refresh:boolean=false,year:string='2020',season:string='REG') : Promise<any> {
+async function _getSchedule(refresh:boolean=false,year:string='2021',season:string='REG') : Promise<any> {
   let seasonData:any;
   let filename = `NBA_${season}SeasonData${year}.json`;
   try {

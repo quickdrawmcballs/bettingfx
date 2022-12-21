@@ -190,7 +190,7 @@ export async function getSeasonGames(refresh?:boolean) : Promise<Game[]> {
 async function _getSchedule(refresh:boolean=false) : Promise<any> {
   let seasonData:any;
   try {
-    seasonData = refresh ? undefined : JSON.parse( await readFromFile('./NFL_SeasonData2020.json'));
+    seasonData = refresh ? undefined : JSON.parse( await readFromFile('./NFL_SeasonData2021.json'));
   }
   catch (err) {
     Logger.error(err);
@@ -202,7 +202,7 @@ async function _getSchedule(refresh:boolean=false) : Promise<any> {
     seasonData = _.get(resp,'data',[]);
 
     // write the json to file
-    await outputToFile('./NFL_SeasonData2020.json',JSON.stringify(seasonData));
+    await outputToFile('./NFL_SeasonData2021.json',JSON.stringify(seasonData));
   }
 
   return seasonData;

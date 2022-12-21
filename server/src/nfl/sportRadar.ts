@@ -7,9 +7,9 @@ const api_key:string = Config.sportRadar.nfl_api;
 const ret_format:string = Config.sportRadar.format; //'.json';
 
 const statics = {
-  year: '2020',
+  year: '2021',
   nfl_season: 'reg',
-  nfl_season_week: '7'
+  nfl_season_week: '1'
 }
 
 const preURL = "http://api.sportradar.us/nfl/official/trial/v6/en/";
@@ -54,7 +54,7 @@ function buildBoxScore(game_id:string) : string {
  * @param season season (PRE,REG,PST, defaults: REG)
  * @returns string
  */
-function buildSchedule(year:string='2020',season:string='REG') : string {
+function buildSchedule(year:string='2021',season:string='REG') : string {
   return buildURL('schedule','games',year,season);
 } 
 
@@ -91,7 +91,7 @@ async function request(url:string) : Promise<any> {
     Logger.info(`Used requests ${used}. Remaining requests ${alloted - used}`);
 
     return resp;
-  } catch (err) {
+  } catch (err:any) {
     console.error(`${url} has failed. ${err.toString()}`);
   }
 }

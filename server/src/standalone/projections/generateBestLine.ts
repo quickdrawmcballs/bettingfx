@@ -94,9 +94,8 @@ async function readCSV(filePath: string): Promise<any> {
     });
 }
 
-
 async function main() {
-    let week = Number(argv[0]) || 2;
+    let week = Number(argv[0]) || 9;
 
     // get the projections
     let projections = await readCSV(resolve(__dirname, `../../../data/projections/nfl/week-${week}-fantasy-football-player-ppr-projections.csv`))
@@ -141,7 +140,6 @@ async function main() {
     // open up projections
     console.debug(`Finished with lineups`);
 }
-
 
 main();
 

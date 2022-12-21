@@ -20,7 +20,7 @@ class TeamBoxScores {
         this.getAllGames = () => this.games.home.concat(this.games.away).sort((a, b) => (a.scheduled > b.scheduled) ? 1 : -1);
         this.getLastGames = (num) => {
             let all = this.getAllGames();
-            return all.slice(Math.max(all.length - num, 1));
+            return all.slice(Math.max(all.length - num, 0));
         };
         // super(team);
         this.city = team.city;

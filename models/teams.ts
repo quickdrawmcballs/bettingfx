@@ -40,7 +40,7 @@ export class TeamBoxScores implements TEAM_BOXSCORES {
     getLastGames = (num:number) => {
         let all = this.getAllGames();
         
-        return all.slice(Math.max(all.length - num, 1));
+        return all.slice(Math.max(all.length - num, 0));
     }
 }
 

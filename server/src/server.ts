@@ -77,12 +77,12 @@ async function run() {
                 let odds = await doOdds({sport:'basketball_nba',display:'nba'},refresh);
                 socket.emit('oddsNBA',odds);
             }
-            catch (error) {
+            catch (error:any) {
                 Logger.error(error);
                 socket.emit('server_error', new RequestError(
                     `Error Updating Odds`,
-                    `An Error has occured updating Odds`,
-                    error
+                    `An Error has occurred updating Odds`,
+                    error as Error
                 ));
             }
         });
@@ -93,12 +93,12 @@ async function run() {
                 let season = await NBASeason(refresh);
                 socket.emit('oddsNBA',season);
             }
-            catch (error) {
+            catch (error:any) {
                 Logger.error(error);
                 socket.emit('server_error', new RequestError(
                     `Error Updating NBA Season`,
-                    `An Error has occured updating NBA Season`,
-                    error
+                    `An Error has occurred updating NBA Season`,
+                    error as Error
                 ));
             }
         });
@@ -109,12 +109,12 @@ async function run() {
                 let stats = await getUpcomingGameStats({refreshFromSource:refresh});
                 socket.emit('UpcomingNBAGamesStats', stats);
             }
-            catch (error) {
+            catch (error : any) {
                 Logger.error(error);
                 socket.emit('server_error', new RequestError(
                     `Error Updating NBA Upcoming Games`,
-                    `An Error has occured updating NBA Upcoming Games`,
-                    error
+                    `An Error has occurred updating NBA Upcoming Games`,
+                    error as Error
                 ));
             }
         });
@@ -125,12 +125,12 @@ async function run() {
                 let data = await getTeamStats({team});
                 socket.emit('UpcomingNBAGamesStats', data);
             }
-            catch(error) {
+            catch(error : any) {
                 Logger.error(error);
                 socket.emit('server_error', new RequestError(
-                    `Error Retreiving NBA Team Stats`,
-                    `An Error has occured retreiving NBA Team Stats for ${team}`,
-                    error
+                    `Error Retrieving NBA Team Stats`,
+                    `An Error has occurred Retrieving NBA Team Stats for ${team}`,
+                    error as Error
                 ));
             }
         });
@@ -139,7 +139,7 @@ async function run() {
             Logger.error(error);
             socket.emit('server_error', new RequestError(
                 `Socket.IO Error`,
-                `An Error has occured with the web sockets`,
+                `An Error has occurred with the web sockets`,
                 error
             ));
         });

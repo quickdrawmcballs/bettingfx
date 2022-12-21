@@ -51,7 +51,7 @@ async function run() {
     let refresh = (/true/i).test(String(_.get(argv,'refresh')));
     let season = _.get(argv,'season') as string | undefined;
     let year = _.get(argv,'year') as string | undefined;
-    Logger.info(`Running ${year||'2020'} ${season||'REG'} season... Refresh:${refresh}`);
+    Logger.info(`Running ${year||'2021'} ${season||'REG'} season... Refresh:${refresh}`);
     NBASeason(refresh,year,season);
   }
   else if (_.isEqual(mode,'nba_play')) {

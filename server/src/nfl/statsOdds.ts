@@ -5,10 +5,44 @@ import { doSeason as NFLSeason } from './statsRetreiver';
 import { openNFLStatsCsv } from '../utils/mediaCsv';
 import { convertToCsv, createDatedFileName, outputToFile } from '../utils/output';
 import { Logger } from '../logging';
+import { Ribbon } from 'd3-chord';
+import { formatFloat } from '../utils/utils';
 
+type TriState = true | false | null;
+type HomeAway = 'Home' | 'Away' | null;
 
+interface game {
+  home: string;
+  away: string;
 
-type TriState = true | false | null
+  home_1st: number;
+  home_2nd: number;
+  home_3rd: number;
+  home_4th: number;
+  home_final: number;
+  away_1st: number;
+  away_2nd: number;
+  away_3rd: number;
+  away_4th: number;
+  away_final: number;
+
+  total_open: number;
+  total_close: number;
+  home_odds_open: number;
+  home_odds_close: number;
+  away_odds_open: number;
+  away_odds_close: number;
+  second_total: number;
+  second_home_odds: number;
+  second_away_odds: number;
+  home_money_line: number;
+  away_money_line: number;
+
+  favorite: HomeAway;
+
+  home_win: TriState;
+  favorite_win: TriState;
+}
 
 class Game {
   home: string = '';
@@ -37,17 +71,54 @@ class Game {
   home_money_line: number = 0;
   away_money_line: number = 0;
 
+  favorite: HomeAway = null;
   home_win: TriState = null;
   favorite_win: TriState = null;
 
-  constructor(line: any) {
-    this.away = line.Team;
-    this.away_money_line = line.ML;
-    this.away_1st = line['1st'];
-    this.away_2nd = line['2nd'];
-    this.away_3rd = line['3rd'];
-    this.away_4th = line['4th'];
-    this.away_final = line.Final;
+  constructor(line?: any) {
+    if (line) {
+      this.away = line.Team;
+      this.away_money_line = line.ML;
+      this.away_1st = line['1st'];
+      this.away_2nd = line['2nd'];
+      this.away_3rd = line['3rd'];
+      this.away_4th = line['4th'];
+      this.away_final = line.Final;
+    }
+  }
+}
+
+class GameResult extends Game {
+  winMargin: number = 0;
+  home_cover: TriState = null;
+  away_cover: TriState = null;
+
+  constructor(game:Game) {
+    super();
+
+    _.merge(this,game);
+
+    this.winMargin = Math.abs(game.home_final - game.away_final);
+
+    // no favorite
+    if (game.home_odds_close===0) {
+      this.home_cover = game.home_win === true;
+      this.away_cover = game.home_win === false;
+    }
+    // home was underdog and getting points
+    else if (game.home_odds_close>0) {
+      let homeAdj = (game.home_final - game.home_odds_close);
+
+      this.home_cover = (homeAdj === game.away_final)?null:(homeAdj>game.away_final);
+      this.away_cover = this.home_cover === null ? null : !this.home_cover;
+    }
+    // home was favorite
+    else {
+      let homeAdj = (game.home_final + game.home_odds_close);
+
+      this.home_cover = (homeAdj === game.away_final) ? null : (homeAdj > game.away_final);
+      this.away_cover = this.home_cover === null ? null : !this.home_cover;
+    }
   }
 }
 
@@ -178,6 +249,124 @@ const fields = [
   // }
 ]
 
+async function doCalcs(games: any[]) {
+
+  let results: GameResult[] = games.map((game:Game)=>new GameResult(game));
+
+  // let homeTeamWin: any[] = _.filter(games, (game: Game) => game.home_win === true);
+  // let awayTeamWin: any[] = _.filter(games, (game: Game) => game.home_win === false);
+
+  // let homeTeamCover: any[] = _.filter(results, (game: GameResult) => game.home_cover === true);
+  // let awayTeamCover: any[] = _.filter(results, (game: GameResult) => game.away_cover === true);
+
+  let homeTeamWin: GameResult[] = [];
+  let awayTeamWin: GameResult[] = [];
+
+  let homeTeamCover: GameResult[] = [];
+  let awayTeamCover: GameResult[] = [];
+
+  let favoriteCover: GameResult[] = [];
+  let underDogCover: GameResult[] = [];
+
+  let favoriteUpAtHalfCover: GameResult[] = [];
+  let favoriteUpAtHalfLoss: GameResult[] = [];
+  let underdogUpAtHalfCover: GameResult[] = [];
+  let underdogUpAtHalfLoss: GameResult[] = [];
+
+  games.forEach( (game:Game)=>{
+    let result = new GameResult(game);
+
+    if (result.home_win === true) {
+      homeTeamWin.push(result)
+    }
+    else if (result.home_win === false) {
+      awayTeamWin.push(result);
+    }
+
+    if (result.home_cover === true) {
+      homeTeamCover.push(result);
+    }
+    else if (result.away_cover === true) {
+      awayTeamCover.push(result);
+    }
+
+    // favorite covers
+    if (result.favorite_win === true) {
+      favoriteCover.push(result);
+      // count only no ties
+      if ((result.home_1st + result.home_2nd) !== (result.away_1st + result.away_2nd)) {
+        // favorite was Home
+        if (result.favorite === 'Home') {
+            // favorite is ahead
+            if ((result.home_1st + result.home_2nd) > (result.away_1st + result.away_2nd)) {
+              favoriteUpAtHalfCover.push(result);
+            }
+            else {
+              underdogUpAtHalfLoss.push(result);
+            }
+        }
+        // favorite was Away
+        else {
+          // favorite is ahead
+          if ((result.away_1st + result.away_2nd) > (result.home_1st + result.home_2nd) ) {
+            favoriteUpAtHalfCover.push(result);
+          }
+          else {
+            underdogUpAtHalfLoss.push(result);
+          }
+        }
+      }
+    }
+    // underdog covers
+    else {
+      underDogCover.push(result);
+      if ((result.home_1st + result.home_2nd) !== (result.away_1st + result.away_2nd)) {
+        // favorite was Home
+        if (result.favorite === 'Home') {
+          // favorite is ahead
+          if ((result.home_1st + result.home_2nd) > (result.away_1st + result.away_2nd)) {
+            favoriteUpAtHalfLoss.push(result);
+          }
+          else {
+            underdogUpAtHalfCover.push(result);
+          }
+        }
+        else {
+          // favorite is ahead
+          if ((result.away_1st + result.away_2nd) > (result.home_1st + result.home_2nd)) {
+            favoriteUpAtHalfLoss.push(result);
+          }
+          else {
+            underdogUpAtHalfCover.push(result);
+          }
+        }
+      }
+    }
+
+    // (firstLine.ML === line.ML) ? null : (firstLine.ML < line.ML) ? (firstLine.Final > line.Final) : (firstLine.Final < line.Final)
+
+    // if (!_.isNull(result.cover)) {
+    //   if (result.cover) {
+    //     homeTeamCover.push(game);
+    //   }
+    //   else {
+    //     awayTeamCover.push(game);
+    //   }
+    // }
+    
+  });
+
+  console.log(`Win rate of home team ${formatFloat(homeTeamWin.length / results.length * 100)}`);
+  console.log(`Win rate of away team ${formatFloat(awayTeamWin.length / results.length * 100)}`);
+  console.log(`Cover rate of favorite team ${formatFloat(favoriteCover.length / results.length * 100)}`);
+  console.log(`Cover rate of underdog team ${formatFloat(underDogCover.length / results.length * 100)}`);
+  console.log(`--------------------`);
+  console.log(`Cover rate of favorite up at half time ${formatFloat(favoriteUpAtHalfCover.length / results.length * 100)}`);
+  console.log(`Cover rate of underdog up at half time ${formatFloat(underdogUpAtHalfCover.length / results.length * 100)}`);
+  console.log(`Loss rate of favorite up at half time ${formatFloat(favoriteUpAtHalfLoss.length / results.length * 100)}`);
+  console.log(`Loss rate of underdog up at half time ${formatFloat(underdogUpAtHalfLoss.length / results.length * 100)}`);
+}
+
 export async function run() {
 
   let firstLine: any;
@@ -261,6 +450,7 @@ export async function run() {
 
       current.home_win = (line.Final === firstLine.Final) ? null : (line.Final > firstLine.Final);
       current.favorite_win = (firstLine.ML === line.ML) ? null : (firstLine.ML < line.ML) ? (firstLine.Final > line.Final) : (firstLine.Final < line.Final);
+      current.favorite = (firstLine.ML === line.ML) ? null : (firstLine.ML < line.ML ) ? (firstLine.VH ==='H' ? 'Home' : 'Away') : (line.VH==='H' ? 'Home' : 'Away');
 
       games.push(current);
       i = 0;
@@ -293,16 +483,18 @@ export async function run() {
     game.week = foundGame.week;
     game.scheduled = foundGame.scheduled;
 
-    return game
+    return game;
   });
 
-  // write out the conversion to csv
-  let csv: string = convertToCsv(combined, { fields });
-  if (csv !== '') {
-    Logger.debug(`Creating csv file from this week's odds`);
-    // create the odds file
-    await outputToFile(createDatedFileName('seasonOddsAndResults.csv'), csv);
-    Logger.info(`Created Season Odds and Results successfully`);
-  }
+  doCalcs(combined);
+
+  // // write out the conversion to csv
+  // let csv: string = convertToCsv(combined, { fields });
+  // if (csv !== '') {
+  //   Logger.debug(`Creating csv file from this week's odds`);
+  //   // create the odds file
+  //   await outputToFile(createDatedFileName('seasonOddsAndResults.csv'), csv);
+  //   Logger.info(`Created Season Odds and Results successfully`);
+  // }
 
 }
