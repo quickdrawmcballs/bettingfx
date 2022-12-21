@@ -47,7 +47,7 @@ function buildSchedule(year:string='2020',season:string='REG') : string {
  * @returns string
  */
 function buildGameStats(game_id:string): string {
-  if (!game_id) throw new Error(`Can't retreive games boxscore for empty game_id`);
+  if (!game_id) throw new Error(`Can't retrieve games boxscore for empty game_id`);
 
   return buildURL('summary','games',game_id);
 }
@@ -72,7 +72,7 @@ async function request(url:string) : Promise<any> {
     Logger.info(`Used requests ${used}. Remaining requests ${alloted - used}`);
 
     return resp;
-  } catch (err) {
-    console.error(`${url} has failed. ${err.toString()}`);
+  } catch (err:any) {
+    console.error(`${url} has failed. ${(err as Error).toString()}`);
   }
 }
