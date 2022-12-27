@@ -62,7 +62,7 @@ async function readCSV(filePath: string): Promise<any> {
 
         createReadStream(filePath)
             .pipe(csvParse({ 'headers': true }))
-            .transform((row:any, next): void => {
+            .transform((row:any, next:any): void => {
                 let everything = row['Player'];
 
                 let posTeam = (/\(([^\)]+)\)/).exec(everything) as RegExpExecArray;
@@ -85,8 +85,8 @@ async function readCSV(filePath: string): Promise<any> {
 
                 return next(null,player);
             })
-            .on('error', error => reject(error))
-            .on('data', row => rows.push(row))
+            .on('error', (error:any) => reject(error))
+            .on('data', (row:any) => rows.push(row))
             .on('end', (rowCount: number) => {
                 console.log(`Parsed ${rowCount} rows`);
                 resolve(rows);
@@ -107,7 +107,7 @@ async function main() {
 
     let validLineups:Output[] = [];
 
-    // loop thru each team and thier players and match the projections
+    // loop thru each team and their players and match the projections
     teams.forEach((team:any) => {
         // let valid: Output[] = [];
 
@@ -127,7 +127,7 @@ async function main() {
         // }
     });
 
-    // write out the validLinups to csv
+    // write out the validLineups to csv
     if (validLineups.length>0) {
         let csv: string = convertToCsv(validLineups, { fields });
 

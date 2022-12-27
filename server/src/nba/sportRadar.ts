@@ -29,13 +29,13 @@ function buildBoxScore(game_id:string) : string {
 
 /**
  * buildSchedule
- * ex: http://api.sportradar.us/nba/trial/v7/en/games/2021/REG/schedule.json?api_key=
+ * ex: http://api.sportradar.us/nba/trial/v7/en/games/2022/REG/schedule.json?api_key=
  * 
  * @param year schedule year (defaults: 2020)
  * @param season season (PRE,REG,PST, defaults: REG)
  * @returns string
  */
-function buildSchedule(year:string='2020',season:string='REG') : string {
+function buildSchedule(year:string='2022',season:string='REG') : string {
   return buildURL('schedule','games',year,season);
 } 
 
@@ -53,6 +53,7 @@ function buildGameStats(game_id:string): string {
 }
 
 async function request(url:string) : Promise<any> {
+  
   let requestConfig:AxiosRequestConfig = {
     method: 'GET',
     url,

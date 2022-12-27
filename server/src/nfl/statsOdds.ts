@@ -1,7 +1,7 @@
 
 import _ from 'lodash';
 
-import { doSeason as NFLSeason } from './statsRetreiver';
+import { doSeason as NFLSeason } from './statsRetriever';
 import { openNFLStatsCsv } from '../utils/mediaCsv';
 import { convertToCsv, createDatedFileName, outputToFile } from '../utils/output';
 import { Logger } from '../logging';

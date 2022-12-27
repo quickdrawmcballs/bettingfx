@@ -45,7 +45,7 @@ export async function doSeason(refresh?:boolean) : Promise<{csv:string,json:any}
       !(/All-Star Game/i).test(game.title));
 
     await sleep(AWAIT_REQUEST_MS);
-    Logger.info(`Retreiving ${games.length} stats. Each request will wait ${AWAIT_REQUEST_MS/1000}s, this could take a while.`)
+    Logger.info(`Retrieving ${games.length} stats. Each request will wait ${AWAIT_REQUEST_MS/1000}s, this could take a while.`)
     let boxScores:any[] = [];
     for (let i = 0; i < games.length; i++) {
       let game = games[i];
@@ -57,7 +57,7 @@ export async function doSeason(refresh?:boolean) : Promise<{csv:string,json:any}
       boxScores.push(_.merge(game,{game_stats}));
     }
 
-    Logger.info(`Finishined retreiving all ${games.length} games`);
+    Logger.info(`Finished retrieving all ${games.length} games`);
 
     // let csv:string = _convertToCSV([]);
 

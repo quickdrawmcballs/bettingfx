@@ -7,7 +7,7 @@ import { TEAM_BOXSCORES, TeamBoxScores, SCORE_ANALYSIS, UPCOMING_GAME_STATS,
     GAME_TEAM_STATS, 
     DISPLAY_UPCOMING_GAMES} from '../../../models/lib/teams';
 
-import { getAllPlayedGames, getPlayedGames, getRemainingGames } from './statsRetreiver';
+import { getAllPlayedGames, getPlayedGames, getRemainingGames } from './statsRetriever';
 import { getTeam } from '../utils/teams';
 import { formatFloat } from '../utils/utils';
 import { getOdds, Game } from '../utils/oddsEngine';

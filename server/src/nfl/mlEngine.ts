@@ -6,7 +6,7 @@ import path from 'path';
 
 import { NFL_TEAMS } from '../utils/teams';
 import { formatFloat } from '../utils/utils';
-import { doSeason } from './statsRetreiver';
+import { doSeason } from './statsRetriever';
 import { data } from '@tensorflow/tfjs-node';
 
 const transformCols = ['avg_x_off_points', 'total_x_off_points', 'avg_x_def_points', 'total_x_def_points', 

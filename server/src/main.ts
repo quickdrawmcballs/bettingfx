@@ -4,11 +4,11 @@ import { hideBin } from 'yargs/helpers';
 
 import { Logger } from './logging';
 import { doOdds } from './utils/oddsEngine';
-import { doSeason as NFLSeason } from './nfl/statsRetreiver';
+import { doSeason as NFLSeason } from './nfl/statsRetriever';
 import { dfdTest, train } from './nfl/mlEngine';
 import { calc } from './nba/statsEngine';
-import { getPlayedGames as NBASeason } from './nba/statsRetreiver';
-import { doSeason as MLBSeason } from './mlb/statsRetreiver';
+import { getPlayedGames as NBASeason } from './nba/statsRetriever';
+import { doSeason as MLBSeason } from './mlb/statsRetriever';
 import { run as statOdds } from './nfl/statsOdds';
 
 const argv = yargs(hideBin(process.argv)).argv;
@@ -51,7 +51,7 @@ async function run() {
     let refresh = (/true/i).test(String(_.get(argv,'refresh')));
     let season = _.get(argv,'season') as string | undefined;
     let year = _.get(argv,'year') as string | undefined;
-    Logger.info(`Running ${year||'2021'} ${season||'REG'} season... Refresh:${refresh}`);
+    Logger.info(`Running ${year||'2022'} ${season||'REG'} season... Refresh:${refresh}`);
     NBASeason(refresh,year,season);
   }
   else if (_.isEqual(mode,'nba_play')) {

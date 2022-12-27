@@ -3,7 +3,7 @@ import { Server } from "socket.io";
 import express from 'express';
 
 import { Logger } from './logging';
-import { getPlayedGames as NBASeason } from './nba/statsRetreiver';
+import { getPlayedGames as NBASeason } from './nba/statsRetriever';
 import { doOdds } from './utils/oddsEngine';
 // import { getUpcomingGameStats, getUpcomingGameStatsNew } from './nba/statsEngine';
 import { getTeamStats, getUpcomingGameStats } from './nba/statsService';

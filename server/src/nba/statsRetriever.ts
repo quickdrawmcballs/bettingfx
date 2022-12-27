@@ -57,7 +57,7 @@ export async function getPlayedGames(refresh?:boolean,year?:string,season?:strin
     !(/All-Star Game/i).test(game.title));
 
   await sleep(AWAIT_REQUEST_MS);
-  Logger.info(`Retreiving ${games.length} stats. Each request will wait ${AWAIT_REQUEST_MS/1000}s, this could take a while.`)
+  Logger.info(`Retrieving ${games.length} stats. Each request will wait ${AWAIT_REQUEST_MS/1000}s, this could take a while.`)
   let boxScores:any[] = [];
   for (let i = 0; i < games.length; i++) {
     let game = games[i];
@@ -69,7 +69,7 @@ export async function getPlayedGames(refresh?:boolean,year?:string,season?:strin
     boxScores.push(_.merge(game,{game_stats}));
   }
 
-  Logger.info(`Finishined retreiving all ${games.length} games`);
+  Logger.info(`Finished retrieving all ${games.length} games`);
 
   let csv:string = _convertToCSV([]);
 
@@ -109,7 +109,7 @@ function _convertToCSV(boxScores:any[]) : string {
     return '';
 }
 
-async function _getSchedule(refresh:boolean=false,year:string='2021',season:string='REG') : Promise<any> {
+async function _getSchedule(refresh:boolean=false,year:string='2022',season:string='REG') : Promise<any> {
   let seasonData:any;
   let filename = `NBA_${season}SeasonData${year}.json`;
   try {
